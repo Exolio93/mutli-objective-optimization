@@ -7,3 +7,5 @@
 void print_and_exit(const std::string& message);
 
 #endif
+
+//test
