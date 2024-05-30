@@ -20,6 +20,7 @@ it choice for pivot : ~10,00s
 Test :
 Measure of the number of passages in the while loop for the 20 instances of graphs (N = 50, rho =0.5, val_max = 20) : 
 
+
 ----RANDOM
 number of passages in while loop:
 658 1031 748 729 799 798 793 880 984 739 
@@ -31,6 +32,7 @@ number of labels processed :
 mean : 21100
 total time : 1,4s
 
+
 ---- LEXICOGRAPHIC 
 number of passages in while loop:
 397 640 503 484 554 397 464 591 607 451 
@@ -41,6 +43,7 @@ number of label processed :
 15755 16637 9737 10714 14120 13839 16006 11834 11779 16089
 mean : 13400
 total time : 2,4s
+
 
 ---- FORMER ALGORITHM
 number of passages in while loop :
