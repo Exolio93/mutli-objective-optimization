@@ -5,16 +5,7 @@
 #include "multigraph.hpp"
 #include "alg_bin.hpp"
 
-int main(){
-    std::list<Label> l  = {Label(1,1,1),Label(10,10,10)};
-    
-    for(auto it = l.begin();it != l.end(); ++it) {
-        std::cout<<(*it).getPred()<<std::endl;
-    }
 
-    return 0;
-}
-/*
 int main(){
     int num = 20;
     auto start = std::chrono::high_resolution_clock::now();
@@ -24,6 +15,7 @@ int main(){
         Multigraph g = Multigraph::load_graph("../save/dataset1/graph" + std::to_string(k));
         dijkstra_bin(g, 0, 0, false);
         std::cout<<"ok"<<std::endl;
+        return 0;
     }
     
     auto end = std::chrono::high_resolution_clock::now();
@@ -57,7 +49,7 @@ int main(){
 
     return 0;
 }
-*/
+
 
 
 /*
