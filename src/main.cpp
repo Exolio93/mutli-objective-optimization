@@ -5,7 +5,16 @@
 #include "multigraph.hpp"
 #include "alg_bin.hpp"
 
+int main(){
+    std::list<Label> l  = {Label(1,1,1),Label(10,10,10)};
+    
+    for(auto it = l.begin();it != l.end(); ++it) {
+        std::cout<<(*it).getPred()<<std::endl;
+    }
 
+    return 0;
+}
+/*
 int main(){
     int num = 20;
     auto start = std::chrono::high_resolution_clock::now();
@@ -28,8 +37,6 @@ int main(){
         dijkstra_bin(g, 0, 1,false);
         std::cout<<"ok"<<std::endl;
     }
-    auto end2 = std::chrono::high_resolution_clock::now();
-    
     Multigraph g = Multigraph(2, 4);
 
     g.addArc(0,1,{4,1});
@@ -41,7 +48,7 @@ int main(){
     dijkstra_bin(g, 0,1, true);
 
 
-    
+    auto end2 = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> duration = end - start;
     std::cout << "Temps d'exécution pour random : " << duration.count() << " ms" << std::endl;
     std::chrono::duration<double, std::milli> duration2 = end2 - start2;
@@ -50,7 +57,7 @@ int main(){
 
     return 0;
 }
-
+*/
 
 
 /*
