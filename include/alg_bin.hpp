@@ -9,40 +9,62 @@
 #include<vector>
 
 int choose_node(std::vector<int> &L);
-void dijkstra_bin(Multigraph g, int s, int strategy);
+void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
+
+
+
+class Label {
+public:
+    std::vector<int> data; //(x,y,pred)
+    Label(int x, int y, int pred){data = {x,y,pred};};
+    int getX();
+    int getY();
+    int getPred();
+    void print();
+
+};
+
+class Queue_elt {
+public :
+    std::tuple<int,Label> elt = std::make_tuple(0,Label(0,0,-1));
+    Queue_elt(int n, Label label) : elt(std::make_tuple(n, label)) {};
+    Queue_elt(){};
+    void print();
+    int getNode();
+    Label getLabel();
+
+    bool operator<(Queue_elt& other);
+};
 
 class Queue {
 public :
-    std::vector<std::vector<int>> queue_list;
+    std::vector<Queue_elt> queue_list;
     Queue(){}
-    void add_point(int i);
-    void remove_point(int i);
+    void add_elt(int n, Label lab);
+    int getNode(int i);
+    Label getLabel(int i);
     void print();
-    int random_choice();
-    int max_it_choice();
+    Queue_elt random_choice();
+    Queue_elt lexicographic_choice();
     int size();
 
 
 };
-
-class Label_bin {
+class Label_set {
 public :
-    std::vector<std::tuple<std::tuple<int,int>, int>> set;
+    std::vector<Label> set;
 
-    Label_bin(){};
+    Label_set(){};
 
     int getX(int i);
     int getY(int i);
     int getPred(int i);
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
-    bool add_point(int x, int y , int pred);
+    void add_point_and_update(int x, int y , int pred,Queue &queue,int j);
 
     void print();
     
 };
-
-void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,std::vector<int> &queue);
-
 
 #endif

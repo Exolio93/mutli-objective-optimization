@@ -11,7 +11,16 @@ void Arc::display(){
     std::cout <<"]"<< std::endl;
 }
 
-
+void Multigraph::print(){
+    std::cout<< "dim : "<<dim<<", N : "<<N<<std::endl;
+    for(int i = 0;i<N;++i) {
+        for(int j = 0;j<N;++j) {
+            if (A_bool[i][j] == 1) {
+                A[i][j].display();
+            }
+        }
+    }
+}
 void Multigraph::addArc(int i, int j, std::vector<int> ws) {
 
     if (i>=N || i<0 ||j>=N || j<0 ) {
@@ -55,4 +64,63 @@ Multigraph Multigraph::generate_graph(int dim, int N, float rho, int val_max){
 
 
     return g;
+}
+
+Multigraph Multigraph::load_graph(std::string path) {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        print_and_exit("load_graph : can't open the file");
+    }
+    std::string line;
+
+    int N,dim;
+    
+    if (std::getline(file, line)) {
+        std::istringstream iss(line);
+        iss>>N;
+    }
+    if (std::getline(file, line)) {
+        std::istringstream iss(line);
+        iss>>dim;
+    }
+
+
+    Multigraph g = Multigraph(dim, N);
+
+
+    int i,j;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::vector<int> ws;
+        int number;
+        iss>>i>>j;
+        while (iss >> number) {
+            ws.push_back(number);
+        }
+
+        g.addArc(i,j,ws);
+    }
+
+    return g;
+
+
+    
+
+};
+
+void Multigraph::save_graph(std::string path){
+    std::ofstream outFile(path);
+    outFile<<N<<std::endl;
+    outFile<<dim<<std::endl;
+    for(int i = 0;i<N;++i) {
+        for(int j = 0;j<N;++j) {
+            if (A_bool[i][j] == 1) {
+                outFile<<i<<" "<<j;
+                for(int k = 0;k<A[i][j].weights.size();k++){
+                    outFile<<" "<<A[i][j].weights[k];
+                }
+                outFile<<std::endl;
+            }
+        }
+    }
 }

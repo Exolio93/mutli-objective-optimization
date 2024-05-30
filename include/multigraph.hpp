@@ -4,6 +4,9 @@
 #include <vector>
 #include <list>
 #include <random>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 // Les sommets sont des entier allant de 0 à m-1
 
@@ -46,13 +49,16 @@ public :
         }
     };
 
+    void print();
+
     void addArc(int i, int j, std::vector<int> ws);
 
     //rho : proportion d'arc
     //val_max : max value for each component of arcs
     static Multigraph generate_graph(int N, int dim, float rho, int val_max);
 
-    
+    static Multigraph load_graph(std::string path);
+    void save_graph(std::string path);
 
 };
 

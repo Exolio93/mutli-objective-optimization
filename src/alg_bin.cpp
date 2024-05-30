@@ -1,16 +1,31 @@
 #include "../include/alg_bin.hpp"
 
+int Label::getX(){
+    return data[0];
+}
+int Label::getY(){
+    return data[1];
+}
+int Label::getPred(){
+    return data[2];
+}
+void Label::print(){
+    std::cout<<"label : ("<<getX()<< ","<<getY()<<","<<getPred()<<")"<<std::endl;
+}
 
-int Label_bin::getX(int i){
-    return std::get<0>(std::get<0>(set[i]));
+
+
+
+int Label_set::getX(int i){
+    return set[i].getX();
 }
-int Label_bin::getY(int i){
-    return std::get<1>(std::get<0>(set[i]));
+int Label_set::getY(int i){
+    return set[i].getY();
 }
-int Label_bin::getPred(int i){
-    return std::get<1>(set[i]);
+int Label_set::getPred(int i){
+    return set[i].getPred();
 }
-void Label_bin::print(){
+void Label_set::print(){
     std::cout<<"-----"<<std::endl;
     for(int i = 0; i<set.size(); ++i) {
         std::cout<<"x:"<<getX(i)<< " y:"<<getY(i)<<" pred:"<<getPred(i)<<std::endl;
@@ -21,20 +36,7 @@ void Label_bin::print(){
 
 
 
-void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,Queue &queue){
-    bool b = false;
-    
-    for(int k=0; k<labels[i].set.size(); ++k) {
-        b = labels[j].add_point(labels[i].getX(k) + Wij.weights[0],labels[i].getY(k) + Wij.weights[1], i)|| b;
-    }
-    if(b) {
-        queue.add_point(j);
-    }
-    
-}
-
-
-bool Label_bin::add_point(int x, int y,  int pred){
+void Label_set::add_point_and_update(int x, int y,  int pred,Queue &queue,int j){
     
     /*
     1 - On le place dans la liste selon sa coordonnée x
@@ -50,8 +52,9 @@ bool Label_bin::add_point(int x, int y,  int pred){
 
 
     if (set.size() == 0) {
-        set.push_back(std::make_tuple(std::make_tuple(x,y), pred)); 
-        return true;     
+        set.push_back(Label(x,y,pred)); 
+        queue.add_elt(j,Label(x,y,pred));
+        return;     
     }
 
     
@@ -74,112 +77,126 @@ bool Label_bin::add_point(int x, int y,  int pred){
     //Cas ou l'élement doit être ajouté à la fin
     if (state == 0) {
         if (y>= getY(set.size()-1)) {
-            return false;
+            return;
         }
-        set.push_back(std::make_tuple(std::make_tuple(x,y), pred)); 
-        return true;
+        set.push_back(Label(x,y,pred)); 
+        queue.add_elt(j,Label(x,y,pred));
+        return;
     }
 
     //cas ou l'élement est comprise entre 2 valeurs du set selon x
     if(state == 2) {
         
         if (i>= 0 && y>= getY(i)) { //ie : quand on est pas sur le 1er élement
-            return false;
+            return;
         }
 
         if(y>getY(i+1)) {
-            set.insert(set.begin()+i+1,std::make_tuple(std::make_tuple(x,y), pred));
-            return true;
+            set.insert(set.begin()+i+1,Label(x,y,pred));
+            queue.add_elt(j,Label(x,y,pred));
+            return;
         }
         if(y == getY(i+1)) {
             
-            set[i+1] = std::make_tuple(std::make_tuple(x,y), pred);
-            return true;
+            set[i+1] = Label(x,y,pred);
+            queue.add_elt(j,Label(x,y,pred));
+            return;
         }
         if(y< getY(i+1)) {
-            set[i+1] = std::make_tuple(std::make_tuple(x,y), pred);
+            set[i+1] = Label(x,y,pred);
     
             while(i+2< set.size() && y<= getY(i+2)) {
                 set.erase(set.begin()+i+2);
             }
-            return true;
+            queue.add_elt(j,Label(x,y,pred));
+            return;
         }
     }
 
     //Cas ou l'élement à la même valeur de x qu'un autre éleement du set
     if(state == 1) {
         if(y>= getY(i)) {
-            return false;
+            return;
         }
         if(y<getY(i)) {
-            set[i] = std::make_tuple(std::make_tuple(x,y), pred);
+            set[i] = Label(x,y,pred);
             while(i+1< set.size() && y<= getY(i+1)) {
                 set.erase(set.begin()+i+1);
+
             }
-            return true;
+            queue.add_elt(j,Label(x,y,pred));
+            return;
         }
     }
-    return false;
-}
-
-
-
-void Queue::add_point(int i){
-    for(int k = 0;k<queue_list.size();k++) {
-        if (queue_list[k][0] == i) {
-            queue_list[k][1]++;
-            return;
-        } 
-        if (queue_list[k][0] > i) {
-            queue_list.insert(queue_list.begin()+k,{i,1});
-            return;
-        } 
-    }
-    queue_list.push_back({i,1});
     return;
+}
 
 
+int Queue_elt::getNode(){
+    return std::get<0>(elt);
 };
-void Queue::remove_point(int i){
-    for(int k = 0;k<queue_list.size();k++){
-        if (queue_list[k][0] == i) {
-            queue_list.erase(queue_list.begin()+k);
-            return;
-        } 
-        if (queue_list[k][0] > i) {
-            return;
-        } 
-    }
+Label Queue_elt::getLabel(){
+    return std::get<1>(elt);
 };
+
+void Queue_elt::print() {
+    std::cout<< getNode()<< " - "<< getLabel().getX()<<" "<<getLabel().getY()<<" "<<getLabel().getPred() <<std::endl;
+}
+
+
+void Queue::add_elt(int n, Label lab){
+    queue_list.push_back(Queue_elt(n,lab));
+    return;
+};
+
+int Queue::getNode(int i){
+    return queue_list[i].getNode();
+};
+
+Label Queue::getLabel(int i){
+    return queue_list[i].getLabel();
+};
+
 void Queue::print() {
-    std::cout<<"print :"<<std::endl;
+    std::cout<<"print queue :"<<std::endl;
     for(int k = 0;k<queue_list.size();k++){
-        std::cout<< queue_list[k][0]<< " "<< queue_list[k][1]<<std::endl;
+        std::cout<< getNode(k)<< " - "<< getLabel(k).getX()<<" "<<getLabel(k).getY()<<" "<<getLabel(k).getPred() <<std::endl;
     }
 }
 
-int Queue::random_choice(){
+Queue_elt Queue::random_choice(){
     std::random_device rd;  // Pour obtenir une graine aléatoire
     std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
     std::uniform_int_distribution<> dis_int(0, queue_list.size()-1);
     int val = dis_int(gen);
-    int i = queue_list[val][0];
+    Queue_elt l = queue_list[val];
     queue_list.erase(queue_list.begin()+val);
     
-    return i;
+    return l;
 }
-int Queue::max_it_choice(){
-    int ind_max = 0;
-    for(int k = 1;k<queue_list.size();k++){
-        if (queue_list[k][1] >queue_list[ind_max][1]) {
-            ind_max = k;
+
+Queue_elt Queue::lexicographic_choice(){
+    int k_max = 0;
+    for(int k = 1;k<size(); ++k) {
+        if (queue_list[k]<queue_list[k_max]) {
+            k_max = k;
         }
     }
-    int i = queue_list[ind_max][0];
-    queue_list.erase(queue_list.begin()+ind_max);
-    
-    return i;
+    Queue_elt l = queue_list[k_max];
+    queue_list.erase(queue_list.begin()+k_max);
+    return l;
 }
+
+bool Queue_elt::operator<(Queue_elt& other){
+        if (getLabel().getX()< other.getLabel().getX()) {return true;}
+        if (getLabel().getX()== other.getLabel().getX()
+            &&getLabel().getY() < other.getLabel().getY()) {
+                return true;   
+        }
+        return false;
+    }
+
+
 int Queue::size(){
     return queue_list.size();
 }
@@ -195,40 +212,55 @@ int choose_node(std::vector<int> &L){
     return s;
 }
 
-void dijkstra_bin(Multigraph g, int s, int strategy) {
+void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
+    int counter = 0;
     if (g.dim !=2) {
-        print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
-    }
-    //Labels
-    std::vector<Label_bin> labels = std::vector<Label_bin>(g.N, Label_bin());
-    labels[s].add_point(0,0,s);
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
 
     //Queue
     Queue q = Queue();
-    q.add_point(s);
+
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point_and_update(0,0,s,q,s);
+
+    
 
     while(q.size() >0) {
-        int pivot;
-        if (strategy ==1) {
-            pivot = q.max_it_choice();
-        } else {
+        Queue_elt pivot = Queue_elt();
+        
+        
+        if (strategy==0) {
             pivot = q.random_choice();
+        } else {
+            pivot = q.lexicographic_choice();
+
         }
+        
+        
 
         for (int succ = 0;succ<g.N; ++succ) {
-            if(g.A_bool[pivot][succ] == 1) {
-
-                labels_update(labels,pivot, succ, g.A[pivot][succ], q);
+            if(g.A_bool[pivot.getNode()][succ] == 1) {
+                counter++;
+                labels[succ].add_point_and_update(
+                    pivot.getLabel().getX() + g.A[pivot.getNode()][succ].weights[0],
+                    pivot.getLabel().getY() + g.A[pivot.getNode()][succ].weights[1],
+                    pivot.getNode(),q,succ);
             }
         }
 
     }
-    
-    for(int i =0; i<g.N; ++i) {
-        std::cout<<"|||||||||||||||||||"<<std::endl;
-        std::cout<<"NODE "<<i<<std::endl;
-        labels[i].print();
+    std::cout<<counter<<std::endl;
+    if (display) {
+        std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
     }
+    
+    
     
     
 }
