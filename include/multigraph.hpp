@@ -50,16 +50,41 @@ public :
     };
 
     void print();
-
     void addArc(int i, int j, std::vector<int> ws);
+
+
 
     //rho : proportion d'arc
     //val_max : max value for each component of arcs
-    static Multigraph generate_graph(int N, int dim, float rho, int val_max);
+    static Multigraph generate_graph(int dim, int N, float rho, int val_max);
 
     static Multigraph load_graph(std::string path);
     void save_graph(std::string path);
 
+};
+
+
+class Multigraph2 {
+public :
+    int dim;
+    int N;
+    std::vector<std::vector<Arc>> A;
+
+
+    Multigraph2(int dim_size, int N_size) {
+        dim = dim_size;
+        N = N_size;
+        A.resize(N);
+    };
+
+    void print();
+
+    void addArc(int i, int j, std::vector<int> ws);
+
+    //rho : density
+    //val_max : max value for each component of arcs
+
+    static Multigraph2 load_graph(std::string path);
 };
 
 

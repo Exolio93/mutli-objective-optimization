@@ -10,7 +10,7 @@
 
 int choose_node(std::vector<int> &L);
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
-
+void dijkstra_bin2(Multigraph2 g, int s, int strategy, bool display);
 
 
 class Label {

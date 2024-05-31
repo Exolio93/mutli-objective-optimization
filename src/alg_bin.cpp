@@ -30,7 +30,7 @@ void Label_set::print(){
 
 
 void Label_set::add_point_and_update(int x, int y,  int pred,Queue &queue,int j){
-    
+
     /*
     1 - On le place dans la liste selon sa coordonnée x
     2 - On compare au point d'avant 
@@ -266,7 +266,51 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
         }
     }
     
+}
+
+void dijkstra_bin2(Multigraph2 g, int s, int strategy, bool display) {
+    int counter = 0;
+    if (g.dim !=2) {
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
+
+    //Queue
+    Queue q = Queue();
+
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point_and_update(0,0,s,q,s);
+
     
-    
+
+    while(q.size() >0) {
+        Queue_elt pivot = Queue_elt();
+        
+        
+        if (strategy==0) {
+            pivot = q.random_choice();
+        } else {
+            pivot = q.lexicographic_choice();
+
+        }
+        
+        int i = 0;
+        for (auto it = g.A[pivot.getNode()].begin();it!=g.A[pivot.getNode()].end();it++) {
+            counter++;
+            labels[(*it).n_to].add_point_and_update(
+                pivot.getLabel().getX() + (*it).weights[0],
+                pivot.getLabel().getY() + (*it).weights[1],
+                pivot.getNode(),q,(*it).n_to);
+        }
+
+    }
+    std::cout<<counter<<std::endl;
+    if (display) {
+        std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
+    }
     
 }
