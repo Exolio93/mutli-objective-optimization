@@ -44,6 +44,7 @@ public :
     int getNode(int i);
     Label getLabel(int i);
     void print();
+    
     Queue_elt random_choice();
     Queue_elt lexicographic_choice();
     int size();

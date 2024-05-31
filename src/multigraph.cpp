@@ -3,6 +3,7 @@
 #include <iostream>
 
 
+
 void Arc::display(){
     std::cout<< n_from<<" " << n_to<< " : [ ";
     for (int i = 0; i < dim; ++i) {
