@@ -17,19 +17,11 @@ void Label::print(){
 //test
 
 
-int Label_set::getX(int i){
-    return set[i].getX();
-}
-int Label_set::getY(int i){
-    return set[i].getY();
-}
-int Label_set::getPred(int i){
-    return set[i].getPred();
-}
+
 void Label_set::print(){
     std::cout<<"-----"<<std::endl;
-    for(int i = 0; i<set.size(); ++i) {
-        std::cout<<"x:"<<getX(i)<< " y:"<<getY(i)<<" pred:"<<getPred(i)<<std::endl;
+    for(auto it = set.begin();it!=set.end();++it) {
+        std::cout<<"x:"<<(*it).getX()<< " y:"<<(*it).getY()<<" pred:"<<(*it).getPred()<<std::endl;
     }
     std::cout<<"-----"<<std::endl;
 
@@ -60,24 +52,33 @@ void Label_set::add_point_and_update(int x, int y,  int pred,Queue &queue,int j)
 
     
 
+    auto it = set.begin();
     int i = 0;
     int state = 0;
 
-    for(; i<set.size(); ++i) {
-        if(getX(i) == x ) {
+    for(; it!=set.end(); ++it) {
+        if((*it).getX() == x ) {
             state = 1;
 
             break;
         }
-        if(getX(i) > x ) {
+        if((*it).getX() > x ) {
             i --;
+            it --;
             state = 2;
             break;
-        } 
+        }
+        ++i; 
     }
+
+    auto next_it = it;
+    next_it++;
+    auto next_next_it = next_it;
+    next_next_it++;
+
     //Cas ou l'élement doit être ajouté à la fin
     if (state == 0) {
-        if (y>= getY(set.size()-1)) {
+        if (y>= (*(std::prev(set.end()))).getY()) {
             return;
         }
         set.push_back(Label(x,y,pred)); 
@@ -88,26 +89,27 @@ void Label_set::add_point_and_update(int x, int y,  int pred,Queue &queue,int j)
     //cas ou l'élement est comprise entre 2 valeurs du set selon x
     if(state == 2) {
         
-        if (i>= 0 && y>= getY(i)) { //ie : quand on est pas sur le 1er élement
+        if (i>= 0 && y>= (*it).getY()) { //ie : quand on est pas sur le 1er élement
             return;
         }
-
-        if(y>getY(i+1)) {
-            set.insert(set.begin()+i+1,Label(x,y,pred));
+        
+        if(y>(*next_it).getY()) {
+            set.insert(next_it,Label(x,y,pred));
             queue.add_elt(j,Label(x,y,pred));
             return;
         }
-        if(y == getY(i+1)) {
+        if(y == (*next_it).getY()) {
             
-            set[i+1] = Label(x,y,pred);
+            *next_it = Label(x,y,pred);
             queue.add_elt(j,Label(x,y,pred));
             return;
         }
-        if(y< getY(i+1)) {
-            set[i+1] = Label(x,y,pred);
+        if(y< (*next_it).getY()) {
+            *next_it = Label(x,y,pred);
     
-            while(i+2< set.size() && y<= getY(i+2)) {
-                set.erase(set.begin()+i+2);
+            while(i+2< set.size() && y<= (*next_next_it).getY()) {
+                set.erase(next_next_it);
+                ++next_next_it;
             }
             queue.add_elt(j,Label(x,y,pred));
             return;
@@ -116,13 +118,16 @@ void Label_set::add_point_and_update(int x, int y,  int pred,Queue &queue,int j)
 
     //Cas ou l'élement à la même valeur de x qu'un autre éleement du set
     if(state == 1) {
-        if(y>= getY(i)) {
+
+        if(y>= (*it).getY()) {
             return;
         }
-        if(y<getY(i)) {
-            set[i] = Label(x,y,pred);
-            while(i+1< set.size() && y<= getY(i+1)) {
-                set.erase(set.begin()+i+1);
+
+        if(y<(*it).getY()) {
+            *it = Label(x,y,pred);
+            while(i+1< set.size() && y<= (*next_it).getY()) {
+                set.erase(next_it);
+                ++next_it;
 
             }
             queue.add_elt(j,Label(x,y,pred));

@@ -6,6 +6,7 @@
 #include "alg_bin.hpp"
 
 int main(){
+    std::cout<<"ok";
     int num = 20;
 
     Multigraph g = Multigraph(2, 4);
@@ -17,6 +18,7 @@ int main(){
     g.addArc(2,3,{1,2});
 
     dijkstra_bin(g, 0,1, true);
+
     auto start = std::chrono::high_resolution_clock::now();
     
     for(int k = 0;k<num;++k) {

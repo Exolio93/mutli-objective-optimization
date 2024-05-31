@@ -53,13 +53,10 @@ public :
 };
 class Label_set {
 public :
-    std::vector<Label> set;
+    std::list<Label> set;
 
     Label_set(){};
 
-    int getX(int i);
-    int getY(int i);
-    int getPred(int i);
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
     void add_point_and_update(int x, int y , int pred,Queue &queue,int j);
