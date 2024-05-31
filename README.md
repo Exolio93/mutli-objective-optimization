@@ -56,3 +56,10 @@ total time : 0,8s
 
 
 
+#######
+Implementation of linked list : same perfomances than vector
+
+#######
+Binary search : can't perform due to use of linked list
+
+#######
