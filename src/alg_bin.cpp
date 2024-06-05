@@ -4,13 +4,13 @@ using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
 
 int Label_bin::getX(int i){
-    return std::get<0>(std::get<0>(set[i]));
+    return set[i].x;
 }
 int Label_bin::getY(int i){
-    return std::get<1>(std::get<0>(set[i]));
+    return set[i].y;
 }
 int Label_bin::getPred(int i){
-    return std::get<1>(set[i]);
+    return set[i].pred;
 }
 void Label_bin::print(){
     std::cout<<"-----"<<std::endl;
@@ -35,6 +35,10 @@ void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,Queue 
     
 }
 
+void Label_bin::add_set(Label_bin &lab_i, Arc &Wij){
+
+}
+
 
 bool Label_bin::add_point(int x, int y,  int pred){
     
@@ -52,7 +56,7 @@ bool Label_bin::add_point(int x, int y,  int pred){
 
 
     if (set.size() == 0) {
-        set.push_back(std::make_tuple(std::make_tuple(x,y), pred)); 
+        set.push_back(Label(x,y,pred)); 
         return true;     
     }
 
@@ -78,7 +82,7 @@ bool Label_bin::add_point(int x, int y,  int pred){
         if (y>= getY(set.size()-1)) {
             return false;
         }
-        set.push_back(std::make_tuple(std::make_tuple(x,y), pred)); 
+        set.push_back(Label(x,y,pred)); 
         return true;
     }
 
@@ -90,16 +94,16 @@ bool Label_bin::add_point(int x, int y,  int pred){
         }
 
         if(y>getY(i+1)) {
-            set.insert(set.begin()+i+1,std::make_tuple(std::make_tuple(x,y), pred));
+            set.insert(set.begin()+i+1,Label(x,y,pred));
             return true;
         }
         if(y == getY(i+1)) {
             
-            set[i+1] = std::make_tuple(std::make_tuple(x,y), pred);
+            set[i+1] = Label(x,y,pred);
             return true;
         }
         if(y< getY(i+1)) {
-            set[i+1] = std::make_tuple(std::make_tuple(x,y), pred);
+            set[i+1] = Label(x,y,pred);
     
             while(i+2< set.size() && y<= getY(i+2)) {
                 set.erase(set.begin()+i+2);
@@ -114,7 +118,7 @@ bool Label_bin::add_point(int x, int y,  int pred){
             return false;
         }
         if(y<getY(i)) {
-            set[i] = std::make_tuple(std::make_tuple(x,y), pred);
+            set[i] = Label(x,y,pred);
             while(i+1< set.size() && y<= getY(i+1)) {
                 set.erase(set.begin()+i+1);
             }

@@ -25,9 +25,18 @@ public :
 
 };
 
+class Label {
+public :
+    int x;
+    int y;
+    int pred;
+
+    Label(int _x, int _y, int _pred) {x = _x; y=_y; pred = _pred;}
+};
+
 class Label_bin {
 public :
-    std::vector<std::tuple<std::tuple<int,int>, int>> set;
+    std::vector<Label> set;
 
     Label_bin(){};
 
@@ -37,12 +46,16 @@ public :
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
     bool add_point(int x, int y , int pred);
-
+    void add_set(Label_bin &lab_i, Arc &Wij);
     void print();
     
 };
 
-void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,std::vector<int> &queue);
+void labels_update(std::vector<Label_bin> &labels, int i, int j, 
+Arc &Wij,std::vector<int> &queue);
+
+
+
 
 
 #endif
