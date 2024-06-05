@@ -12,7 +12,7 @@ int main(){
 
     // some tests
     if (state == 0){
-        std::string dataset = "../save/temp/2_50_10";
+        std::string dataset = "../save/temp/2_200_10";
         Multigraph g = Multigraph::load_graph(dataset);
 
         dijkstra_bin(g,0,1,0);

@@ -1,5 +1,9 @@
 #include "../include/alg_bin.hpp"
 #include<chrono>
+using Clock = std::chrono::high_resolution_clock;
+using TimePoint = std::chrono::time_point<Clock>;
+using Duration = std::chrono::duration<double>;
+
 
 int Label::getX(){
     return data[0];
@@ -231,27 +235,23 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point_and_update(0,0,s,q,s);
 
-    float av_time = 0;
-    float counter = 1;
-    auto start = std::chrono::high_resolution_clock::now(); 
-    auto start_step = std::chrono::high_resolution_clock::now(); 
-    auto end_step = std::chrono::high_resolution_clock::now(); 
-    auto end = std::chrono::high_resolution_clock::now(); 
+    auto start = Clock::now(); 
+    auto end = Clock::now(); 
+    
 
+    std::vector<Duration> durations(3, Duration(0));
     while(q.size() >0) {
-        start = std::chrono::high_resolution_clock::now(); 
+        
         
         Queue_elt pivot = Queue_elt();
         
-        
+
         if (strategy==0) {
             pivot = q.random_choice();
         } else {
             pivot = q.lexicographic_choice();
 
         }
-        
-        
 
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot.getNode()][succ] == 1) {
@@ -262,13 +262,12 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
                     pivot.getNode(),q,succ);
             }
         }
-        end = std::chrono::high_resolution_clock::now(); 
+
 
 
         
-
-
     }
+
 
     if (display) {
         std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
