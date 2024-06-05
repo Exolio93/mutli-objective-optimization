@@ -4,6 +4,9 @@
 #include <vector>
 #include <list>
 #include <random>
+#include <fstream>
+#include <string>
+#include <sstream>
 
 // Les sommets sont des entier allant de 0 à m-1
 

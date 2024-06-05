@@ -1,5 +1,7 @@
 #include "../include/alg_bin.hpp"
-
+#include<chrono>
+using Clock = std::chrono::high_resolution_clock;
+using Duration = std::chrono::duration<double>;
 
 int Label_bin::getX(int i){
     return std::get<0>(std::get<0>(set[i]));
@@ -207,22 +209,52 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     Queue q = Queue();
     q.add_point(s);
 
+
+    float counter = 0;
+    float total_l =1;
+    auto start = Clock::now();
+    auto end = Clock::now();
+    auto start1 = Clock::now();
+    auto end1 = Clock::now();
+    auto start2 = Clock::now();
+    auto end2 = Clock::now();
+
+    auto durations = std::vector<Duration>(3,Duration(0));
+
+
     while(q.size() >0) {
+        counter++;
+        start = Clock::now();
+        start1 = Clock::now();
         int pivot;
         if (strategy ==1) {
             pivot = q.max_it_choice();
         } else {
             pivot = q.random_choice();
         }
-
+        total_l += q.size();
+        end1 = Clock::now();
+        start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
 
                 labels_update(labels,pivot, succ, g.A[pivot][succ], q);
             }
         }
+        end2 = Clock::now();
+        end = Clock::now();
+
+        durations[0] += end - start;
+        durations[1] += end1 - start1;
+        durations[2] += end2 - start2;
 
     }
+    std::cout
+    <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
+    << "\nupdate : "<<durations[2].count()/durations[0].count()
+    <<"\naverage total : "<<total_l/counter
+    <<std::endl;
+
     if (display) {
         for(int i =0; i<g.N; ++i) {
             std::cout<<"|||||||||||||||||||"<<std::endl;

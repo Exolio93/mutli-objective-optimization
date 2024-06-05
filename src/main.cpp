@@ -16,7 +16,7 @@ int main(){
 
         g.addArc(0,1,{4,1});
         g.addArc(0,2,{3,5});
-        g.addArc(1,3,{6,4});
+        g.addArc(1,3,{6,4});    
         g.addArc(1,2,{2,2});
         g.addArc(2,3,{1,2});
 
@@ -25,9 +25,15 @@ int main(){
 
     }
     if (state == 1) {
-        
+        std::string dataset = "../save/temp/2_500_10";
+        Multigraph g = Multigraph::load_graph(dataset);
+
         auto start = Clock::now();
-        
+        dijkstra_bin(g,0,0,false);
+        auto end = Clock::now();
+
+        Duration d = end - start;
+        std::cout<< "Total time : " << d.count()<<std::endl;   
         
         return 0;
 
@@ -38,25 +44,3 @@ int main(){
     return 0;
 }
 
-
-
-int main() {
-    
-}
-
-/*
-int main(){
-    Queue q = Queue();
-    q.add_point(0);
-    q.add_point(1);
-    q.add_point(2);
-    q.add_point(3);
-    q.add_point(4);
-    q.add_point(5);
-    q.print();
-    std::cout<<q.random_choice()<<std::endl;
-    q.print();
-    
-    return 0;
-}
-*/
