@@ -1,4 +1,5 @@
 #include "../include/alg_bin.hpp"
+#include<chrono>
 
 int Label::getX(){
     return data[0];
@@ -219,7 +220,7 @@ int choose_node(std::vector<int> &L){
 }
 
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
-    int counter = 0;
+    
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
 
@@ -230,9 +231,16 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point_and_update(0,0,s,q,s);
 
-    
+    float av_time = 0;
+    float counter = 1;
+    auto start = std::chrono::high_resolution_clock::now(); 
+    auto start_step = std::chrono::high_resolution_clock::now(); 
+    auto end_step = std::chrono::high_resolution_clock::now(); 
+    auto end = std::chrono::high_resolution_clock::now(); 
 
     while(q.size() >0) {
+        start = std::chrono::high_resolution_clock::now(); 
+        
         Queue_elt pivot = Queue_elt();
         
         
@@ -247,16 +255,21 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
 
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot.getNode()][succ] == 1) {
-                counter++;
+
                 labels[succ].add_point_and_update(
                     pivot.getLabel().getX() + g.A[pivot.getNode()][succ].weights[0],
                     pivot.getLabel().getY() + g.A[pivot.getNode()][succ].weights[1],
                     pivot.getNode(),q,succ);
             }
         }
+        end = std::chrono::high_resolution_clock::now(); 
+
+
+        
+
 
     }
-    std::cout<<counter<<std::endl;
+
     if (display) {
         std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
         for(int i =0; i<g.N; ++i) {

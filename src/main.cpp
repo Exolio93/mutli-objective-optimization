@@ -12,35 +12,11 @@ int main(){
 
     // some tests
     if (state == 0){
-        int num = 20;
-        std::string dataset = "../save/dataset_2_50_80p/graph";
+        std::string dataset = "../save/temp/2_50_10";
+        Multigraph g = Multigraph::load_graph(dataset);
 
-
-        auto start = std::chrono::high_resolution_clock::now(); 
-        for(int k = 0;k<1;++k) {
-            Multigraph g = Multigraph::load_graph(dataset + std::to_string(k));
-            std::cout<<"ok"<<std::endl;
-        }
-        auto end = std::chrono::high_resolution_clock::now();
+        dijkstra_bin(g,0,1,0);
         
-
-        std::cout<<"----"<<std::endl;
-
-
-        auto start2 = std::chrono::high_resolution_clock::now();
-        for(int k = 0;k<1;++k) {
-            Multigraph2 g = Multigraph2::load_graph(dataset + std::to_string(k));
-            std::cout<<"ok"<<std::endl;
-        }
-        auto end2 = std::chrono::high_resolution_clock::now();
-        
-
-
-        std::chrono::duration<double, std::milli> duration = end - start;
-        std::cout << "Temps d'exécution pour random : " << duration.count() << " ms" << std::endl;
-        std::chrono::duration<double, std::milli> duration2 = end2 - start2;
-        std::cout << "Temps d'exécution pour lexicographic : " << duration2.count() << " ms" << std::endl;
-
 
         return 0;
     }
@@ -52,10 +28,10 @@ int main(){
     //////////////////////////////////////////////////////////////
     //create a dataset
     if(state == 1){
-        int num = 20;
+        int num = 1;
         std::vector<Multigraph> l;
         for(int k = 0; k<num; ++k) {
-            Multigraph::generate_graph(2,50,0.8,20).save_graph("../save/dataset_2_50_80p/graph" + std::to_string(k));
+            Multigraph::generate_graph(2,500,0.1,20).save_graph("../save/temp/2_500_10");
 
         }
         return 0;
