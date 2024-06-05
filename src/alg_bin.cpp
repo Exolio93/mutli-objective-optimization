@@ -195,7 +195,7 @@ int choose_node(std::vector<int> &L){
     return s;
 }
 
-void dijkstra_bin(Multigraph g, int s, int strategy) {
+void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
     }
@@ -223,12 +223,14 @@ void dijkstra_bin(Multigraph g, int s, int strategy) {
         }
 
     }
-    
-    for(int i =0; i<g.N; ++i) {
-        std::cout<<"|||||||||||||||||||"<<std::endl;
-        std::cout<<"NODE "<<i<<std::endl;
-        labels[i].print();
+    if (display) {
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
     }
+    
     
     
 }

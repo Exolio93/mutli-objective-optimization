@@ -9,7 +9,7 @@
 #include<vector>
 
 int choose_node(std::vector<int> &L);
-void dijkstra_bin(Multigraph g, int s, int strategy);
+void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
 
 class Queue {
 public :
