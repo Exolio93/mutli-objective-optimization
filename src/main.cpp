@@ -9,7 +9,7 @@ using Duration = std::chrono::duration<double>;
 
 int main(){
 
-    int state = 1;
+    int state =1;
 
     if (state == 0) {
         Multigraph g = Multigraph(2, 4);

@@ -31,27 +31,28 @@ public :
     int y;
     int pred;
 
+    int getX() const;
+    int getY() const;
+    int getPred() const;
+
     Label(int _x, int _y, int _pred) {x = _x; y=_y; pred = _pred;}
 };
 
-class Label_bin {
+class Label_set {
 public :
-    std::vector<Label> set;
+    std::list<Label> set;
 
-    Label_bin(){};
-
-    int getX(int i);
-    int getY(int i);
-    int getPred(int i);
+    Label_set(){};
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
     bool add_point(int x, int y , int pred);
-    void add_set(Label_bin &lab_i, Arc &Wij);
+    void add_set(Label_set &lab_i, Arc &Wij);
     void print();
+
     
 };
 
-void labels_update(std::vector<Label_bin> &labels, int i, int j, 
+void labels_update(std::vector<Label_set> &labels, int i, int j, 
 Arc &Wij,std::vector<int> &queue);
 
 

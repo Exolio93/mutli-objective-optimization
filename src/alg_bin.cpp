@@ -3,19 +3,20 @@
 using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
 
-int Label_bin::getX(int i){
-    return set[i].x;
+int Label::getX() const{
+    return x;
 }
-int Label_bin::getY(int i){
-    return set[i].y;
+int Label::getY() const{
+    return y;
 }
-int Label_bin::getPred(int i){
-    return set[i].pred;
+int Label::getPred() const{
+    return pred;
 }
-void Label_bin::print(){
+
+void Label_set::print(){
     std::cout<<"-----"<<std::endl;
-    for(int i = 0; i<set.size(); ++i) {
-        std::cout<<"x:"<<getX(i)<< " y:"<<getY(i)<<" pred:"<<getPred(i)<<std::endl;
+    for(auto it = set.begin();it!=set.end();++it) {
+        std::cout<<"x:"<<(*it).getX()<< " y:"<<(*it).getY()<<" pred:"<<(*it).getPred()<<std::endl;
     }
     std::cout<<"-----"<<std::endl;
 
@@ -23,11 +24,14 @@ void Label_bin::print(){
 
 
 
-void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,Queue &queue){
+void labels_update(std::vector<Label_set> &labels, int i, int j, Arc &Wij,Queue &queue){
     bool b = false;
-    
+    auto it = labels[i].set.begin();
     for(int k=0; k<labels[i].set.size(); ++k) {
-        b = labels[j].add_point(labels[i].getX(k) + Wij.weights[0],labels[i].getY(k) + Wij.weights[1], i)|| b;
+        int wx = (*it).getX();
+        int wy = (*it).getY();
+        b = labels[j].add_point(wx + Wij.weights[0], wy + Wij.weights[1], i)|| b;
+        ++it;
     }
     if(b) {
         queue.add_point(j);
@@ -35,12 +39,12 @@ void labels_update(std::vector<Label_bin> &labels, int i, int j, Arc &Wij,Queue 
     
 }
 
-void Label_bin::add_set(Label_bin &lab_i, Arc &Wij){
+void Label_set::add_set(Label_set &lab_i, Arc &Wij){
 
 }
 
 
-bool Label_bin::add_point(int x, int y,  int pred){
+bool Label_set::add_point(int x, int y,  int pred){
     
     /*
     1 - On le place dans la liste selon sa coordonnée x
@@ -62,24 +66,35 @@ bool Label_bin::add_point(int x, int y,  int pred){
 
     
 
+    auto it = set.begin();
     int i = 0;
     int state = 0;
 
-    for(; i<set.size(); ++i) {
-        if(getX(i) == x ) {
+    for(; it!=set.end(); ++it) {
+        if((*it).getX() == x ) {
             state = 1;
 
             break;
         }
-        if(getX(i) > x ) {
+        if((*it).getX() > x ) {
             i --;
+            it --;
             state = 2;
             break;
-        } 
+        }
+        ++i; 
     }
+
+    auto next_it = it;
+    next_it++;
+    auto next_next_it = next_it;
+    next_next_it++;
+
+
     //Cas ou l'élement doit être ajouté à la fin
     if (state == 0) {
-        if (y>= getY(set.size()-1)) {
+        
+        if (y>= (*(std::prev(set.end()))).getY()) {
             return false;
         }
         set.push_back(Label(x,y,pred)); 
@@ -89,24 +104,25 @@ bool Label_bin::add_point(int x, int y,  int pred){
     //cas ou l'élement est comprise entre 2 valeurs du set selon x
     if(state == 2) {
         
-        if (i>= 0 && y>= getY(i)) { //ie : quand on est pas sur le 1er élement
+        if (i>= 0 && y>= (*it).getY()) { //ie : quand on est pas sur le 1er élement
             return false;
         }
 
-        if(y>getY(i+1)) {
-            set.insert(set.begin()+i+1,Label(x,y,pred));
+        if(y>(*next_it).getY()) {
+            set.insert(next_it,Label(x,y,pred));
             return true;
         }
-        if(y == getY(i+1)) {
+        if(y == (*next_it).getY()) {
             
-            set[i+1] = Label(x,y,pred);
+            *next_it = Label(x,y,pred);
             return true;
         }
-        if(y< getY(i+1)) {
-            set[i+1] = Label(x,y,pred);
-    
-            while(i+2< set.size() && y<= getY(i+2)) {
-                set.erase(set.begin()+i+2);
+        if(y< (*next_it).getY()) {
+            *next_it = Label(x,y,pred);
+        
+            while(i+2< set.size() && y<= (*next_next_it).getY()) {
+                set.erase(next_next_it);
+                ++next_next_it;
             }
             return true;
         }
@@ -114,13 +130,15 @@ bool Label_bin::add_point(int x, int y,  int pred){
 
     //Cas ou l'élement à la même valeur de x qu'un autre éleement du set
     if(state == 1) {
-        if(y>= getY(i)) {
+        if(y>= (*it).getY()) {
             return false;
         }
-        if(y<getY(i)) {
-            set[i] = Label(x,y,pred);
-            while(i+1< set.size() && y<= getY(i+1)) {
-                set.erase(set.begin()+i+1);
+        if(y<(*it).getY()) {
+            *it = Label(x,y,pred);
+            while(i+1< set.size() && y<= (*next_it).getY()) {
+                set.erase(next_it);
+                ++next_it;
+
             }
             return true;
         }
@@ -202,11 +220,12 @@ int choose_node(std::vector<int> &L){
 }
 
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
+    
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
     }
     //Labels
-    std::vector<Label_bin> labels = std::vector<Label_bin>(g.N, Label_bin());
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point(0,0,s);
 
     //Queue
@@ -241,7 +260,6 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
         start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
-
                 labels_update(labels,pivot, succ, g.A[pivot][succ], q);
             }
         }
