@@ -56,3 +56,46 @@ Multigraph Multigraph::generate_graph(int dim, int N, float rho, int val_max){
 
     return g;
 }
+
+
+Multigraph Multigraph::load_graph(std::string path) {
+    std::ifstream file(path);
+    if (!file.is_open()) {
+        print_and_exit("load_graph : can't open the file");
+    }
+    std::string line;
+
+    int N,dim;
+    
+    if (std::getline(file, line)) {
+        std::istringstream iss(line);
+        iss>>N;
+    }
+    if (std::getline(file, line)) {
+        std::istringstream iss(line);
+        iss>>dim;
+    }
+
+
+    Multigraph g = Multigraph(dim, N);
+
+
+    int i,j;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
+        std::vector<int> ws;
+        int number;
+        iss>>i>>j;
+        while (iss >> number) {
+            ws.push_back(number);
+        }
+
+        g.addArc(i,j,ws);
+    }
+
+    return g;
+
+
+    
+
+};
