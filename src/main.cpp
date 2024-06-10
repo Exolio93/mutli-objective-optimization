@@ -25,17 +25,27 @@ int main(){
 
     }
     if (state == 1) {
-        std::string dataset = "../save/temp/2_500_10";
-        Multigraph g = Multigraph::load_graph(dataset);
+        std::string d500 = "../save/temp/2_500_10";
+        std::string d1000 = "../save/temp/2_1000_10";
+        std::string d2000 = "../save/temp/2_2000_10";
+        std::string d4000 = "../save/temp/2_4000_10";
+
+        Multigraph g4000 = Multigraph::load_graph(d4000);
+
 
         auto start = Clock::now();
-        dijkstra_bin(g,0,0,false);
+        dijkstra_bin(g4000,0,0,false);
         auto end = Clock::now();
 
         Duration d = end - start;
         std::cout<< "Total time : " << d.count()<<std::endl;   
+
         
         return 0;
+
+    }
+    if (state == 2) {
+        Multigraph::generate_graph(4000,2,0.1,20).save_graph("../save/temp/2_4000_10");
 
     }
     

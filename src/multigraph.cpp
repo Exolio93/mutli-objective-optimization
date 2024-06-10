@@ -30,7 +30,7 @@ void Multigraph::addArc(int i, int j, std::vector<int> ws) {
 
 }
 
-Multigraph Multigraph::generate_graph(int dim, int N, float rho, int val_max){
+Multigraph Multigraph::generate_graph(int N, int dim, float rho, int val_max){
     
     Multigraph g = Multigraph(dim,N);
 
@@ -98,4 +98,21 @@ Multigraph Multigraph::load_graph(std::string path) {
 
     
 
+};
+
+void Multigraph::save_graph(std::string path){
+    std::ofstream outFile(path);
+    outFile<<N<<std::endl;
+    outFile<<dim<<std::endl;
+    for(int i = 0;i<N;++i) {
+        for(int j = 0;j<N;++j) {
+            if (A_bool[i][j] == 1) {
+                outFile<<i<<" "<<j;
+                for(int k = 0;k<A[i][j].weights.size();k++){
+                    outFile<<" "<<A[i][j].weights[k];
+                }
+                outFile<<std::endl;
+            }
+        }
+    }
 };

@@ -55,7 +55,7 @@ public :
     //val_max : max value for each component of arcs
     static Multigraph generate_graph(int N, int dim, float rho, int val_max);
     static Multigraph load_graph(std::string path);
-
+    void save_graph(std::string path);
     
 
 };
