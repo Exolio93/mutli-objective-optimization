@@ -24,8 +24,10 @@ void Label_set::print(){
 
 
 
-void labels_update(std::vector<Label_set> &labels, int i, int j, Arc &Wij,Queue &queue){
+void labels_update(std::vector<Label_set> &labels,Arc &Wij,Queue &queue){
     bool b = false;
+    int i = Wij.n_from;
+    int j = Wij.n_to;
     auto it = labels[i].set.begin();
     for(int k=0; k<labels[i].set.size(); ++k) {
         int wx = (*it).getX();
@@ -38,6 +40,131 @@ void labels_update(std::vector<Label_set> &labels, int i, int j, Arc &Wij,Queue 
     }
     
 }
+
+void labels_update2(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
+    bool b = add_pareto_set(labels, Wij);
+    if(b){
+        queue.add_point(Wij.n_to);
+    }
+    
+}
+
+
+bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
+
+    Label_set new_label_set = Label_set();
+    bool add2queue = false;
+    auto it_j= labs[Wij.n_to].set.begin(); //x,y
+    auto it_i = labs[Wij.n_from].set.begin();// + Wij --> w,t
+
+    /**********
+     * --> 1st case : x <= w AND y <= t :
+     * advance(w,t)
+     * 
+     * --> 2nd case : x < w AND y > t :
+     * add(x,y), advance(x,y)
+     *
+     * --> 3rd case : x > w AND y < t :
+     * add(w,t), advance(w,t)
+     * 
+     * --> 4th case : x >= w AND y >= t :
+     * advance(x,y)
+     * 
+    */
+
+    while(it_j!= labs[Wij.n_to].set.end() && it_i != labs[Wij.n_from].set.end()) {
+
+        //Case 1 B
+        if((*it_j).getX() <= (*it_i).getX()+ Wij.weights[0]
+        && (*it_j).getY() <= (*it_i).getY()+ Wij.weights[1]) {
+            
+            it_i++;
+        }
+        //Case 2 D
+        else if ((*it_j).getX() < (*it_i).getX()+ Wij.weights[0]
+        && (*it_j).getY() > (*it_i).getY()+ Wij.weights[1]){
+        
+            new_label_set.add_point_at_end(*it_j);
+            it_j++;
+            
+        }
+
+        //Case3 A
+        else if((*it_j).getX() > (*it_i).getX()+ Wij.weights[0]
+        && (*it_j).getY() < (*it_i).getY()+ Wij.weights[1]){
+    
+            add2queue = true;
+            new_label_set.add_point_at_end(    Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred())   );
+            it_i++;
+        }
+
+        //Case4 C
+        else if((*it_j).getX() >= (*it_i).getX()+ Wij.weights[0]
+        && (*it_j).getY() >= (*it_i).getY()+ Wij.weights[1]){
+
+            it_j++;
+        }
+        else {
+            std::cout<< "This message shouldn't be seen !"<<std::endl;
+        }
+    }
+
+
+    if(it_j == labs[Wij.n_to].set.end() && it_i == labs[Wij.n_from].set.end()){
+        return add2queue;
+    }
+
+    if(it_j == labs[Wij.n_to].set.end()) {
+        
+        if(new_label_set.set.empty()){
+            while(it_i!=labs[Wij.n_from].set.end()) {
+                
+                new_label_set.add_point_at_end( Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred()) );
+                add2queue = true;
+                it_i++;
+                
+            }
+            labs[Wij.n_to] = new_label_set;
+            return add2queue;
+        }
+        else {
+            Label last = new_label_set.get_last();
+            while(it_i!=labs[Wij.n_from].set.end()) {
+                if (last.getY()>(*it_i).getY()) {
+                    new_label_set.add_point_at_end(  Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred())  );
+                    add2queue = true;
+                    
+                }
+                it_i++;
+            }
+            labs[Wij.n_to] = new_label_set;
+            return add2queue;
+        }
+    }
+
+    if(it_i == labs[Wij.n_from].set.end()) {
+        if(new_label_set.set.empty()){
+            return false;
+        }
+        else {
+            Label last = new_label_set.get_last();
+            while(it_j!=labs[Wij.n_to].set.end()) {
+                if (last.getY()>(*it_j).getY()) {
+                    new_label_set.add_point_at_end(*it_j);
+    
+                    
+                }
+                it_j++;
+            }
+            labs[Wij.n_to] = new_label_set;
+            return add2queue;
+        }
+    }
+    std::cout<< "This message shouldn't be seen"<<std::endl;
+    return false;
+
+}
+
 
 void Label_set::add_set(Label_set &lab_i, Arc &Wij){
 
@@ -145,6 +272,14 @@ bool Label_set::add_point(int x, int y,  int pred){
     }
     return false;
 }
+
+void Label_set::add_point_at_end(Label label){
+    set.push_back(label); 
+};
+
+Label Label_set::get_last(){
+    return set.back();
+};
 
 
 
@@ -260,7 +395,7 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
         start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
-                labels_update(labels,pivot, succ, g.A[pivot][succ], q);
+                labels_update2(labels,g.A[pivot][succ], q);
             }
         }
         end2 = Clock::now();

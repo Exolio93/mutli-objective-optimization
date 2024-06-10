@@ -48,12 +48,17 @@ public :
     bool add_point(int x, int y , int pred);
     void add_set(Label_set &lab_i, Arc &Wij);
     void print();
+    void add_point_at_end(Label label);
+    Label get_last();
+
 
     
 };
 
-void labels_update(std::vector<Label_set> &labels, int i, int j, 
-Arc &Wij,std::vector<int> &queue);
+void labels_update(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);
+
+void labels_update2(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);
+bool add_pareto_set(std::vector<Label_set> &labs, Arc &Wij);
 
 
 
