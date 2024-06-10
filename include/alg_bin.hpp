@@ -19,7 +19,7 @@ public :
     void remove_point(int i);
     void print();
     int random_choice();
-    int max_it_choice();
+    int first_choice();
     int size();
 
 

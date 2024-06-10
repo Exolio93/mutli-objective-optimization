@@ -327,18 +327,13 @@ int Queue::random_choice(){
     
     return i;
 }
-int Queue::max_it_choice(){
-    int ind_max = 0;
-    for(int k = 1;k<queue_list.size();k++){
-        if (queue_list[k][1] >queue_list[ind_max][1]) {
-            ind_max = k;
-        }
-    }
-    int i = queue_list[ind_max][0];
-    queue_list.erase(queue_list.begin()+ind_max);
-    
+
+int Queue::first_choice(){
+    int i = queue_list[0][0];
+    queue_list.erase(queue_list.begin());
     return i;
 }
+
 int Queue::size(){
     return queue_list.size();
 }
@@ -386,7 +381,7 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
         start1 = Clock::now();
         int pivot;
         if (strategy ==1) {
-            pivot = q.max_it_choice();
+            pivot = q.first_choice();
         } else {
             pivot = q.random_choice();
         }
