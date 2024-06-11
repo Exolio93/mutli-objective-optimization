@@ -281,31 +281,80 @@ Label Label_set::get_last(){
     return set.back();
 };
 
+float Label_set::calculate_AUC(){
+    float auc = 0;
+    auto it = set.begin();
+    if (it == set.end()) {return 0;}
+    int lx =(*it).getX();
+    int ly =(*it).getY();
+
+    auc += lx*ly;
+    ++it;
+    
+    while (it != set.end()) {
+        auc += ((*it).getX()-lx)*((*it).getX()+ly)/2;
+        lx =(*it).getX();
+        ly =(*it).getY();
+        ++it;
+
+    }
+    return auc;
+
+};
+
+
+bool Queue_elt::operator<(const Queue_elt& other) const {
+    return auc > other.auc; // Notez que nous utilisons '>' car std::priority_queue est max-heap par défaut
+};
+
+void Queue_priority::push(const Queue_elt& elt) {
+    pq.push(elt);
+};
+
+Queue_elt Queue_priority::top() {
+    if (!pq.empty()) {
+        return pq.top();
+    } else {
+        throw std::out_of_range("La queue est vide");
+    }
+};
+
+void Queue_priority::pop() {
+    if (!pq.empty()) {
+        pq.pop();
+    } else {
+        throw std::out_of_range("La queue est vide");
+    }
+};
+
+bool Queue_priority::empty() const {
+    return pq.empty();
+};
+
 
 
 void Queue::add_point(int i){
     for(int k = 0;k<queue_list.size();k++) {
-        if (queue_list[k][0] == i) {
-            queue_list[k][1]++;
+        if (queue_list[k] == i){
             return;
         } 
-        if (queue_list[k][0] > i) {
-            queue_list.insert(queue_list.begin()+k,{i,1});
+        if (queue_list[k] > i) {
+            queue_list.insert(queue_list.begin()+k,i);
             return;
         } 
     }
-    queue_list.push_back({i,1});
+    queue_list.push_back(i);
     return;
 
 
 };
 void Queue::remove_point(int i){
     for(int k = 0;k<queue_list.size();k++){
-        if (queue_list[k][0] == i) {
+        if (queue_list[k] == i) {
             queue_list.erase(queue_list.begin()+k);
             return;
         } 
-        if (queue_list[k][0] > i) {
+        if (queue_list[k] > i) {
             return;
         } 
     }
@@ -313,7 +362,7 @@ void Queue::remove_point(int i){
 void Queue::print() {
     std::cout<<"print :"<<std::endl;
     for(int k = 0;k<queue_list.size();k++){
-        std::cout<< queue_list[k][0]<< " "<< queue_list[k][1]<<std::endl;
+        std::cout<< queue_list[k]<<std::endl;
     }
 }
 
@@ -322,14 +371,14 @@ int Queue::random_choice(){
     std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
     std::uniform_int_distribution<> dis_int(0, queue_list.size()-1);
     int val = dis_int(gen);
-    int i = queue_list[val][0];
+    int i = queue_list[val];
     queue_list.erase(queue_list.begin()+val);
     
     return i;
 }
 
 int Queue::first_choice(){
-    int i = queue_list[0][0];
+    int i = queue_list[0];
     queue_list.erase(queue_list.begin());
     return i;
 }

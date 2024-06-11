@@ -30,11 +30,11 @@ int main(){
         std::string d2000 = "../save/temp/2_2000_10";
         std::string d4000 = "../save/temp/2_4000_10";
 
-        Multigraph g4000 = Multigraph::load_graph(d4000);
+        Multigraph g1000 = Multigraph::load_graph(d1000);
 
 
         auto start = Clock::now();
-        dijkstra_bin(g4000,0,0,false);
+        dijkstra_bin(g1000,0,0,false);
         auto end = Clock::now();
 
         Duration d = end - start;

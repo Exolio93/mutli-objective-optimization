@@ -3,7 +3,7 @@
 
 #include "multigraph.hpp"
 #include "tools.hpp"
-
+#include<queue>
 #include<tuple>
 #include <algorithm> 
 #include<vector>
@@ -11,9 +11,32 @@
 int choose_node(std::vector<int> &L);
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
 
+
+class Queue_elt {
+public :
+    int n;
+    int auc;
+    Queue_elt(int i) : n(i), auc(0) {};
+
+    bool operator<(const Queue_elt& other) const;
+};
+
+
+class Queue_priority {
+public:
+    std::priority_queue<Queue_elt> pq;
+
+    void push(const Queue_elt& elt);
+    Queue_elt top();
+    void pop();
+    bool empty() const;
+};
+
+
+
 class Queue {
 public :
-    std::vector<std::vector<int>> queue_list;
+    std::vector<int> queue_list;
     Queue(){}
     void add_point(int i);
     void remove_point(int i);
@@ -49,6 +72,7 @@ public :
     void add_set(Label_set &lab_i, Arc &Wij);
     void print();
     void add_point_at_end(Label label);
+    float calculate_AUC();
     Label get_last();
 
 
