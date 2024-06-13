@@ -49,6 +49,15 @@ void labels_update2(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
     
 }
 
+void labels_update2_priority(std::vector<Label_set> &labels, Arc &Wij,Queue_priority &queue,std::vector<std::vector<int>> &borders){
+    bool b = add_pareto_set(labels, Wij);
+    if(b){
+
+        queue.push(Queue_elt(Wij.n_to, labels[Wij.n_to], borders));
+    }
+    
+}
+ 
 
 bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
@@ -281,30 +290,32 @@ Label Label_set::get_last(){
     return set.back();
 };
 
-float Label_set::calculate_AUC(){
+float Label_set::calculate_AUC(std::vector<std::vector<int>> &borders, int i){
     float auc = 0;
     auto it = set.begin();
     if (it == set.end()) {return 0;}
     int lx =(*it).getX();
     int ly =(*it).getY();
-
-    auc += lx*ly;
-    ++it;
     
+    auc += (lx-borders[0][i])*(ly - borders[1][i]);
+
+    ++it;
     while (it != set.end()) {
-        auc += ((*it).getX()-lx)*((*it).getX()+ly)/2;
+        auc += (static_cast<float>((*it).getX()-lx))*(static_cast<float>((*it).getY()+ly- 2*borders[1][i]))/2;
         lx =(*it).getX();
         ly =(*it).getY();
         ++it;
 
     }
+    auc += (borders[3][i]-lx)*(borders[2][i]-ly);
     return auc;
 
 };
 
 
 bool Queue_elt::operator<(const Queue_elt& other) const {
-    return auc > other.auc; // Notez que nous utilisons '>' car std::priority_queue est max-heap par défaut
+    return auc > other.auc;
+   
 };
 
 void Queue_priority::push(const Queue_elt& elt) {
@@ -318,6 +329,10 @@ Queue_elt Queue_priority::top() {
         throw std::out_of_range("La queue est vide");
     }
 };
+
+int Queue_priority::size(){
+    return pq.size();
+}
 
 void Queue_priority::pop() {
     if (!pq.empty()) {
@@ -338,10 +353,10 @@ void Queue::add_point(int i){
         if (queue_list[k] == i){
             return;
         } 
-        if (queue_list[k] > i) {
-            queue_list.insert(queue_list.begin()+k,i);
-            return;
-        } 
+        // if (queue_list[k] > i) {
+        //     queue_list.insert(queue_list.begin()+k,i);
+        //     return;
+        // } 
     }
     queue_list.push_back(i);
     return;
@@ -387,16 +402,6 @@ int Queue::size(){
     return queue_list.size();
 }
 
-
-int choose_node(std::vector<int> &L){
-    if (L.size() == 0) {
-        print_and_exit("choose_node : L is empty");
-    }
-    int s = L.back();
-    //std::cout<<"On a choisit : "<<s<<std::endl;
-    L.pop_back();
-    return s;
-}
 
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     
@@ -454,6 +459,7 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
     << "\nupdate : "<<durations[2].count()/durations[0].count()
     <<"\naverage total : "<<total_l/counter
+    <<"counter : "<<counter
     <<std::endl;
 
     if (display) {
@@ -466,4 +472,166 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     
     
     
+}
+
+void dijkstra_AUC(Multigraph g, int s, bool display) {
+    
+    if (g.dim !=2) {
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
+    }
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point(0,0,s);
+
+    std::vector<std::vector<int>> borders = dijkstra_1D(g, s);
+
+    //Queue
+    Queue_priority q = Queue_priority();
+    q.push(Queue_elt(s, labels[s], borders));
+
+    
+
+
+    float counter = 0;
+    float total_l =1;
+    auto start = Clock::now();
+    auto end = Clock::now();
+    auto start1 = Clock::now();
+    auto end1 = Clock::now();
+    auto start2 = Clock::now();
+    auto end2 = Clock::now();
+
+    auto durations = std::vector<Duration>(3,Duration(0));
+
+
+    while(q.size() >0) {
+        counter++;
+        start = Clock::now();
+        start1 = Clock::now();
+
+        Queue_elt pivot = q.top();
+        q.pop();
+
+
+        total_l += q.size();
+        end1 = Clock::now();
+        start2 = Clock::now();
+        for (int succ = 0;succ<g.N; ++succ) {
+            if(g.A_bool[pivot.n][succ] == 1) {
+                labels_update2_priority(labels,g.A[pivot.n][succ], q, borders);
+            }
+        }
+        end2 = Clock::now();
+        end = Clock::now();
+
+        durations[0] += end - start;
+        durations[1] += end1 - start1;
+        durations[2] += end2 - start2;
+
+    }
+    std::cout
+    <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
+    << "\nupdate : "<<durations[2].count()/durations[0].count()
+    <<"\naverage total : "<<total_l/counter
+    <<"counter : "<<counter
+    <<std::endl;
+
+    if (display) {
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
+    }
+    
+    
+    
+}
+
+std::vector<std::vector<int>> dijkstra_1D(Multigraph g, int s) {
+    if (g.dim != 2) {
+        print_and_exit("dijkstra_1D : dimension pas égale à 2");
+    }
+
+    std::vector<std::vector<int>> dists(4, std::vector<int>(g.N, std::numeric_limits<int>::max()));
+    std::vector<std::list<int>> queues(2);
+    std::vector<std::vector<int>> preds(2, std::vector<int>(g.N, -1));
+
+    for (int i = 0; i < g.N; ++i) {
+        queues[0].push_back(i);
+        queues[1].push_back(i);
+    }
+
+    dists[0][s] = 0;dists[1][s] = 0;
+    preds[0][s] = s;preds[1][s] = s;
+
+    for (int count = 0; count < g.N; ++count) {
+        
+        //recherche de l'indice du minimum :
+        auto it_max1 = queues[0].begin();
+        int val_max1 = std::numeric_limits<int>::max();
+        auto it_max2 = queues[1].begin();
+        int val_max2 = std::numeric_limits<int>::max();
+
+
+        for(auto it = queues[0].begin(); it!=queues[0].end();++it){
+            if(dists[0][*it]<= val_max1){
+                it_max1 = it;
+                val_max1 = dists[0][*it];
+            }
+        }
+        for(auto it = queues[1].begin(); it!=queues[1].end();++it){
+            if(dists[1][*it]<= val_max2){
+                it_max2 = it;
+                val_max2 = dists[1][*it];
+            }
+        }
+        queues[0].erase(it_max1);
+        queues[1].erase(it_max2);
+
+        //traitement des voisins :
+        for (int j = 0;j<g.N;j++) {
+            if (g.A_bool[*it_max1][j]){
+                if (dists[0][j]>dists[0][*it_max1] +g.A[*it_max1][j].weights[0]){
+                    dists[0][j] = dists[0][*it_max1] +g.A[*it_max1][j].weights[0];
+                    preds[0][j] = *it_max1;
+                }
+            }
+            if (g.A_bool[*it_max2][j]){
+                if (dists[1][j]>dists[1][*it_max2] +g.A[*it_max2][j].weights[1]){
+                    dists[1][j] = dists[1][*it_max2] +g.A[*it_max2][j].weights[1];
+                    preds[1][j] = *it_max2;
+                }
+            }
+        }
+
+        
+
+    }
+    int ind;
+    int count;
+    for(int i =0;i<g.N; ++i) {
+
+        ind = i;
+        count = 0;
+        while(ind !=s) {
+
+            count += g.A[preds[0][ind]][ind].weights[1];
+            ind = preds[0][ind];
+        }
+        dists[2][i] = count;
+
+        ind = i;
+        count = 0;
+        while(ind!=s) {
+            count += g.A[preds[1][ind]][ind].weights[0];
+            ind = preds[1][ind];
+        }
+        dists[3][i] = count;
+
+
+    }
+
+    return dists;
+
 }
