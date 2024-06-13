@@ -35,34 +35,35 @@ int main(){
         std::string d2000 = "../save/temp/2_2000_10";
         std::string d4000 = "../save/temp/2_4000_10";
 
-        Multigraph g_10 = Multigraph::load_graph(d1000);
-        Multigraph g_30 = Multigraph::load_graph(d200_30);
-        Multigraph g_50 = Multigraph::load_graph(d200_50);
-        Multigraph g_70 = Multigraph::load_graph(d200_70);
+        Multigraph g1 = Multigraph::load_graph(d200_10);
+        Multigraph g2 = Multigraph::load_graph(d500);
+        Multigraph g3 = Multigraph::load_graph(d1000);
+        Multigraph g4 = Multigraph::load_graph(d2000);
 
 
         auto start = Clock::now();
-        dijkstra_bin(g_10,0,0,false);
+        dijkstra_AUC(g1,0,false);
         auto end = Clock::now();
-
         Duration d = end - start;
         std::cout<< "Total time : " << d.count()<<std::endl;
-        std::cout<<"----------"<<std::endl;
+
         start = Clock::now();
-        dijkstra_bin(g_10,0,1,false);
+        dijkstra_AUC(g2,0,false);
         end = Clock::now();
-
         d = end - start;
-        std::cout<< "Total time : " << d.count()<<std::endl;    
-        // dijkstra_bin(g_30,0,0,false);
-        // dijkstra_bin(g_50,0,0,false);
-        // dijkstra_bin(g_70,0,0,false);
-        // dijkstra_AUC(g_10,1,false);
-        // dijkstra_AUC(g_30,1,false);
-        // dijkstra_AUC(g_50,1,false);
-        // dijkstra_AUC(g_70,1,false);
-         
+        std::cout<< "Total time : " << d.count()<<std::endl;
 
+        start = Clock::now();
+        dijkstra_AUC(g3,0,false);
+        end = Clock::now();
+        d = end - start;
+        std::cout<< "Total time : " << d.count()<<std::endl;
+
+        start = Clock::now();
+        dijkstra_AUC(g4,0,false);
+        end = Clock::now();
+        d = end - start;
+        std::cout<< "Total time : " << d.count()<<std::endl;
         
         return 0;
 
@@ -75,9 +76,8 @@ int main(){
     }
     if (state == 3) {
         Label_set l = Label_set();
-        l.add_point(3,4,0);
-        l.add_point(4,3,0);
-        std::vector<std::vector<int>> v = {{1},{1},{4},{4}};
+        l.add_point(2,4,0);
+        std::vector<std::vector<int>> v = {{1},{1},{6},{6}};
         std::cout<<l.calculate_AUC(v,0)<<std::endl;
 
 

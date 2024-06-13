@@ -297,18 +297,22 @@ float Label_set::calculate_AUC(std::vector<std::vector<int>> &borders, int i){
     int lx =(*it).getX();
     int ly =(*it).getY();
     
-    auc += (lx-borders[0][i])*(ly - borders[1][i]);
+    auc += (lx-borders[0][i])*(borders[2][i] - borders[1][i]);
+
+
 
     ++it;
     while (it != set.end()) {
-        auc += (static_cast<float>((*it).getX()-lx))*(static_cast<float>((*it).getY()+ly- 2*borders[1][i]))/2;
+        
+        auc += (static_cast<float>((*it).getX()-lx))*(static_cast<float>(ly-borders[1][i]));
         lx =(*it).getX();
         ly =(*it).getY();
         ++it;
 
     }
-    auc += (borders[3][i]-lx)*(borders[2][i]-ly);
-    return auc;
+    auc += (borders[3][i]-lx)*(ly-borders[1][i]);
+    //return 1 - auc/((borders[3][i]-borders[0][i])*(borders[2][i]-borders[1][i]));
+    return 1 - auc;
 
 };
 
