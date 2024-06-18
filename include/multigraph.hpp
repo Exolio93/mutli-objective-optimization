@@ -15,15 +15,16 @@ public :
     int n_from;
     int n_to;
     int dim;
-    std::vector<int> weights;
+    std::vector<float> weights;
     
     Arc(){};
 
-    Arc(int from, int to, std::vector<int> ws){
+    Arc(int from, int to, std::vector<float> ws){
         n_from = from;
         n_to = to;
         dim = ws.size();
-        weights = ws;};
+        weights = ws;
+        };
 
     void display();
 
@@ -49,11 +50,12 @@ public :
         }
     };
 
-    void addArc(int i, int j, std::vector<int> ws);
+    void addArc(int i, int j, std::vector<float> ws);
 
     //rho : proportion d'arc
     //val_max : max value for each component of arcs
-    static Multigraph generate_graph(int N, int dim, float rho, int val_max);
+    static Multigraph generate_graph(int N, int dim, float rho, float val_max);
+    static Multigraph generate_graph_2(int N, int dim, float rho, float val_max);
     static Multigraph load_graph(std::string path);
     void save_graph(std::string path);
     

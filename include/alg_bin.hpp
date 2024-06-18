@@ -8,22 +8,22 @@
 #include <algorithm> 
 #include<vector>
 
-std::vector<std::vector<int>> dijkstra_1D(Multigraph g, int s);
+std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s);
 void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
 void dijkstra_AUC(Multigraph g, int s, bool display);
 
 
 class Label {
 public :
-    int x;
-    int y;
+    float x;
+    float y;
     int pred;
 
-    int getX() const;
-    int getY() const;
+    float getX() const;
+    float getY() const;
     int getPred() const;
 
-    Label(int _x, int _y, int _pred) {x = _x; y=_y; pred = _pred;}
+    Label(float _x, float _y, int _pred) {x = _x; y=_y; pred = _pred;}
 };
 
 class Label_set {
@@ -33,11 +33,10 @@ public :
     Label_set(){};
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
-    bool add_point(int x, int y , int pred);
-    void add_set(Label_set &lab_i, Arc &Wij);
+    bool add_point(float x, float y , int pred);
     void print();
     void add_point_at_end(Label label);
-    float calculate_AUC(std::vector<std::vector<int>> &borders, int i);
+    float calculate_AUC(std::vector<std::vector<float>> &borders, int i);
     Label get_last();
 
 
@@ -47,10 +46,10 @@ public :
 class Queue_elt {
 public :
     int n;
-    int auc;
+    float auc;
     Label_set* l;
 
-    Queue_elt(int i, Label_set &l_set, std::vector<std::vector<int>> &borders) : n(i), l(&l_set), auc(l_set.calculate_AUC(borders, i)) {};
+    Queue_elt(int i, Label_set &l_set, std::vector<std::vector<float>> &borders) : n(i), l(&l_set), auc(l_set.calculate_AUC(borders, i)) {};
 
     bool operator<(const Queue_elt& other) const;
 };

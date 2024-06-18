@@ -3,10 +3,10 @@
 using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
 
-int Label::getX() const{
+float Label::getX() const{
     return x;
 }
-int Label::getY() const{
+float Label::getY() const{
     return y;
 }
 int Label::getPred() const{
@@ -30,8 +30,8 @@ void labels_update(std::vector<Label_set> &labels,Arc &Wij,Queue &queue){
     int j = Wij.n_to;
     auto it = labels[i].set.begin();
     for(int k=0; k<labels[i].set.size(); ++k) {
-        int wx = (*it).getX();
-        int wy = (*it).getY();
+        float wx = (*it).getX();
+        float wy = (*it).getY();
         b = labels[j].add_point(wx + Wij.weights[0], wy + Wij.weights[1], i)|| b;
         ++it;
     }
@@ -49,7 +49,7 @@ void labels_update2(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
     
 }
 
-void labels_update2_priority(std::vector<Label_set> &labels, Arc &Wij,Queue_priority &queue,std::vector<std::vector<int>> &borders){
+void labels_update2_priority(std::vector<Label_set> &labels, Arc &Wij,Queue_priority &queue,std::vector<std::vector<float>> &borders){
     bool b = add_pareto_set(labels, Wij);
     if(b){
 
@@ -175,12 +175,8 @@ bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 }
 
 
-void Label_set::add_set(Label_set &lab_i, Arc &Wij){
 
-}
-
-
-bool Label_set::add_point(int x, int y,  int pred){
+bool Label_set::add_point(float x, float y,  int pred){
     
     /*
     1 - On le place dans la liste selon sa coordonnée x
@@ -290,12 +286,12 @@ Label Label_set::get_last(){
     return set.back();
 };
 
-float Label_set::calculate_AUC(std::vector<std::vector<int>> &borders, int i){
+float Label_set::calculate_AUC(std::vector<std::vector<float>> &borders, int i){
     float auc = 0;
     auto it = set.begin();
     if (it == set.end()) {return 0;}
-    int lx =(*it).getX();
-    int ly =(*it).getY();
+    float lx =(*it).getX();
+    float ly =(*it).getY();
     
     auc += (lx-borders[0][i])*(borders[2][i] - borders[1][i]);
 
@@ -312,13 +308,13 @@ float Label_set::calculate_AUC(std::vector<std::vector<int>> &borders, int i){
     }
     auc += (borders[3][i]-lx)*(ly-borders[1][i]);
     //return 1 - auc/((borders[3][i]-borders[0][i])*(borders[2][i]-borders[1][i]));
-    return 1 - auc;
+    return auc;
 
 };
 
 
 bool Queue_elt::operator<(const Queue_elt& other) const {
-    return auc > other.auc;
+    return auc < other.auc;
    
 };
 
@@ -487,7 +483,7 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point(0,0,s);
 
-    std::vector<std::vector<int>> borders = dijkstra_1D(g, s);
+    std::vector<std::vector<float>> borders = dijkstra_1D(g, s);
 
     //Queue
     Queue_priority q = Queue_priority();
@@ -552,12 +548,12 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
     
 }
 
-std::vector<std::vector<int>> dijkstra_1D(Multigraph g, int s) {
+std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s) {
     if (g.dim != 2) {
         print_and_exit("dijkstra_1D : dimension pas égale à 2");
     }
 
-    std::vector<std::vector<int>> dists(4, std::vector<int>(g.N, std::numeric_limits<int>::max()));
+    std::vector<std::vector<float>> dists(4, std::vector<float>(g.N, std::numeric_limits<float>::max()));
     std::vector<std::list<int>> queues(2);
     std::vector<std::vector<int>> preds(2, std::vector<int>(g.N, -1));
 
@@ -573,9 +569,9 @@ std::vector<std::vector<int>> dijkstra_1D(Multigraph g, int s) {
         
         //recherche de l'indice du minimum :
         auto it_max1 = queues[0].begin();
-        int val_max1 = std::numeric_limits<int>::max();
+        float val_max1 = std::numeric_limits<float>::max();
         auto it_max2 = queues[1].begin();
-        int val_max2 = std::numeric_limits<int>::max();
+        float val_max2 = std::numeric_limits<float>::max();
 
 
         for(auto it = queues[0].begin(); it!=queues[0].end();++it){
@@ -613,7 +609,7 @@ std::vector<std::vector<int>> dijkstra_1D(Multigraph g, int s) {
 
     }
     int ind;
-    int count;
+    float count;
     for(int i =0;i<g.N; ++i) {
 
         ind = i;

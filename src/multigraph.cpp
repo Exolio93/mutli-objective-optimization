@@ -12,12 +12,12 @@ void Arc::display(){
 }
 
 
-void Multigraph::addArc(int i, int j, std::vector<int> ws) {
+void Multigraph::addArc(int i, int j, std::vector<float> ws) {
 
     if (i>=N || i<0 ||j>=N || j<0 ) {
         print_and_exit("addEdge : La valeur des sommets n'est pas correcte");
     }
-    if (static_cast<int>(ws.size()) != dim) {
+    if (static_cast<float>(ws.size()) != dim) {
         
         print_and_exit("addEdge : Le vecteur en entrée n'est pas de taille dim");
     }
@@ -30,14 +30,14 @@ void Multigraph::addArc(int i, int j, std::vector<int> ws) {
 
 }
 
-Multigraph Multigraph::generate_graph(int N, int dim, float rho, int val_max){
+Multigraph Multigraph::generate_graph(int N, int dim, float rho, float val_max){
     
     Multigraph g = Multigraph(dim,N);
 
     std::random_device rd;  // Pour obtenir une graine aléatoire
     std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
     std::uniform_real_distribution<> dis(0.0, 1.0);
-    std::uniform_int_distribution<> dis_int(0, val_max);
+    std::uniform_real_distribution<> dis_int(0, val_max);
 
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
@@ -45,8 +45,53 @@ Multigraph Multigraph::generate_graph(int N, int dim, float rho, int val_max){
             if (dis(gen)<rho) {
                 g.A_bool[i][j] = true;
 
-                std::vector<int> ws(dim,0);
+                std::vector<float> ws(dim,0);
                 for(int k =0;k<dim;++k){ws[k] = dis_int(gen);}
+                g.addArc(i,j,ws);
+            } 
+            
+        }
+    }
+
+
+    return g;
+}
+
+Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max){
+    
+    Multigraph g = Multigraph(dim,N);
+
+    std::random_device rd;  // Pour obtenir une graine aléatoire
+    std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+    std::uniform_real_distribution<> dis_int(0, val_max);
+
+    std::vector<std::vector<float>> v(dim, std::vector<float>(N,0));
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < N; ++j) {
+            v[i][j] = dis_int(gen);
+
+
+
+           
+            
+        }
+    }
+
+    if (dim!=2) {
+        print_and_exit("generate_graph_2 : fonction non prévu pour une dimension >2");
+    }
+
+    for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+
+            if (dis(gen)<rho) {
+                g.A_bool[i][j] = true;
+
+                std::vector<float> ws(dim,0);
+                //hypothèse ou dim est égal à 2 :
+                ws[0] = std::sqrt((v[0][i] - v[0][j])*(v[0][i] - v[0][j]) + (v[1][i] - v[1][j])*(v[1][i] - v[1][j]));
+                ws[1] = std::abs(v[0][i] - v[0][j]) + std::abs(v[1][i] - v[1][j]);
                 g.addArc(i,j,ws);
             } 
             
@@ -83,8 +128,8 @@ Multigraph Multigraph::load_graph(std::string path) {
     int i,j;
     while (std::getline(file, line)) {
         std::istringstream iss(line);
-        std::vector<int> ws;
-        int number;
+        std::vector<float> ws;
+        float number;
         iss>>i>>j;
         while (iss >> number) {
             ws.push_back(number);
