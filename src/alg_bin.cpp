@@ -103,7 +103,7 @@ bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
         && (*it_j).getY() < (*it_i).getY()+ Wij.weights[1]){
     
             add2queue = true;
-            new_label_set.add_point_at_end(    Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred())   );
+            new_label_set.add_point_at_end(    Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from)   );
             it_i++;
         }
 
@@ -128,7 +128,7 @@ bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
         if(new_label_set.set.empty()){
             while(it_i!=labs[Wij.n_from].set.end()) {
                 
-                new_label_set.add_point_at_end( Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred()) );
+                new_label_set.add_point_at_end( Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from) );
                 add2queue = true;
                 it_i++;
                 
@@ -140,7 +140,7 @@ bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
             Label last = new_label_set.get_last();
             while(it_i!=labs[Wij.n_from].set.end()) {
                 if (last.getY()>(*it_i).getY()) {
-                    new_label_set.add_point_at_end(  Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],(*it_i).getPred())  );
+                    new_label_set.add_point_at_end(  Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from)  );
                     add2queue = true;
                     
                 }
@@ -468,6 +468,15 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
             std::cout<<"NODE "<<i<<std::endl;
             labels[i].print();
         }
+    }
+
+    std::ofstream outFile("../save/graph_to_plot/solution");
+    outFile<<g.N<<std::endl;
+    for (int i = 0;i<g.N;i++) {
+        for(auto it = labels[i].set.begin();it!=labels[i].set.end();++it) {
+            outFile<<(*it).getX()<< " "<<(*it).getY()<<" "<<(*it).getPred()<<std::endl;
+        }
+        outFile<<"*"<<std::endl;
     }
     
     

@@ -78,6 +78,23 @@ Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max
         }
     }
 
+
+
+    v[0][0] = 0;
+    v[1][0] = 0;
+    v[0][N-1] = val_max;
+    v[1][N-1] = val_max;
+
+    // std::ofstream outFile("../save/graph_to_plot/map");
+    // outFile<<N<<std::endl;
+    // outFile<<val_max<<std::endl;
+
+    // for(int j = 0;j<N;++j) {
+    //     outFile<<j<<" "<<v[0][j]<< " "<<v[1][j];
+    //     outFile<<std::endl;
+    // }
+
+
     if (dim!=2) {
         print_and_exit("generate_graph_2 : fonction non prévu pour une dimension >2");
     }
@@ -86,12 +103,19 @@ Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max
         for (int j = 0; j < N; ++j) {
 
             if (dis(gen)<rho) {
+
+
                 g.A_bool[i][j] = true;
 
                 std::vector<float> ws(dim,0);
                 //hypothèse ou dim est égal à 2 :
                 ws[0] = std::sqrt((v[0][i] - v[0][j])*(v[0][i] - v[0][j]) + (v[1][i] - v[1][j])*(v[1][i] - v[1][j]));
-                ws[1] = std::abs(v[0][i] - v[0][j]) + std::abs(v[1][i] - v[1][j]);
+                //ws[1] = std::abs(v[0][i] - v[0][j]) + std::abs(v[1][i] - v[1][j]);
+                ws[1] = std::abs(v[1][i] - v[1][j])*std::abs(v[0][i] - v[0][j]);
+
+                if (j==N-1 && i == 0) {
+                    std::cout<<ws[0]<<" ------------ "<< ws[1]<<std::endl;
+                }
                 g.addArc(i,j,ws);
             } 
             

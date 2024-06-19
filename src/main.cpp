@@ -9,18 +9,19 @@ using Duration = std::chrono::duration<double>;
 
 int main(){
 
-    int state =1;
+    int state =0;
 
 
     if (state == 0) {
-        Multigraph g = Multigraph(2, 4);
+        // Multigraph g = Multigraph(2, 4);
 
-        g.addArc(0,1,{4,1});
-        g.addArc(0,2,{3,5});
-        g.addArc(1,3,{6,4});    
-        g.addArc(1,2,{2,2});
-        g.addArc(2,3,{1.1,2.1});
+        // g.addArc(0,1,{4,1});
+        // g.addArc(0,2,{3,5});
+        // g.addArc(1,3,{6,4});    
+        // g.addArc(1,2,{2,2});
+        // g.addArc(2,3,{1.1,2.1});
 
+        Multigraph g = Multigraph::load_graph("../save/graph_to_plot/2_20_50");
         dijkstra_bin(g,0,1,true);
         return 0;
 
