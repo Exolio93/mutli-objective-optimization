@@ -24,42 +24,25 @@ void Label_set::print(){
 
 
 
-void labels_update(std::vector<Label_set> &labels,Arc &Wij,Queue &queue){
-    bool b = false;
-    int i = Wij.n_from;
-    int j = Wij.n_to;
-    auto it = labels[i].set.begin();
-    for(int k=0; k<labels[i].set.size(); ++k) {
-        float wx = (*it).getX();
-        float wy = (*it).getY();
-        b = labels[j].add_point(wx + Wij.weights[0], wy + Wij.weights[1], i)|| b;
-        ++it;
-    }
-    if(b) {
-        queue.add_point(j);
-    }
-    
-}
-
-void labels_update2(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
-    bool b = add_pareto_set(labels, Wij);
+void labels_update(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
+    bool b = merger_pareto_set(labels, Wij);
     if(b){
         queue.add_point(Wij.n_to);
     }
     
 }
 
-void labels_update2_priority(std::vector<Label_set> &labels, Arc &Wij,Queue_priority &queue,std::vector<std::vector<float>> &borders){
-    bool b = add_pareto_set(labels, Wij);
-    if(b){
 
-        queue.push(Queue_elt(Wij.n_to, labels[Wij.n_to], borders));
+void labels_update_using_AUC(std::vector<Label_set> &labels, Arc &Wij,Heap &queue,std::vector<std::vector<float>> &borders){
+    bool b = merger_pareto_set(labels, Wij);
+    if(b){
+        queue.push(Heap_elt(Wij.n_to, labels[Wij.n_to], borders));
     }
     
 }
  
 
-bool add_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
+bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
     Label_set new_label_set = Label_set();
     bool add2queue = false;
@@ -313,16 +296,16 @@ float Label_set::calculate_AUC(std::vector<std::vector<float>> &borders, int i){
 };
 
 
-bool Queue_elt::operator<(const Queue_elt& other) const {
+bool Heap_elt::operator<(const Heap_elt& other) const {
     return auc < other.auc;
    
 };
 
-void Queue_priority::push(const Queue_elt& elt) {
+void Heap::push(const Heap_elt& elt) {
     pq.push(elt);
 };
 
-Queue_elt Queue_priority::top() {
+Heap_elt Heap::top() {
     if (!pq.empty()) {
         return pq.top();
     } else {
@@ -330,11 +313,11 @@ Queue_elt Queue_priority::top() {
     }
 };
 
-int Queue_priority::size(){
+int Heap::size(){
     return pq.size();
 }
 
-void Queue_priority::pop() {
+void Heap::pop() {
     if (!pq.empty()) {
         pq.pop();
     } else {
@@ -342,7 +325,7 @@ void Queue_priority::pop() {
     }
 };
 
-bool Queue_priority::empty() const {
+bool Heap::empty() const {
     return pq.empty();
 };
 
@@ -363,17 +346,7 @@ void Queue::add_point(int i){
 
 
 };
-void Queue::remove_point(int i){
-    for(int k = 0;k<queue_list.size();k++){
-        if (queue_list[k] == i) {
-            queue_list.erase(queue_list.begin()+k);
-            return;
-        } 
-        if (queue_list[k] > i) {
-            return;
-        } 
-    }
-};
+
 void Queue::print() {
     std::cout<<"print :"<<std::endl;
     for(int k = 0;k<queue_list.size();k++){
@@ -381,18 +354,8 @@ void Queue::print() {
     }
 }
 
-int Queue::random_choice(){
-    std::random_device rd;  // Pour obtenir une graine aléatoire
-    std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
-    std::uniform_int_distribution<> dis_int(0, queue_list.size()-1);
-    int val = dis_int(gen);
-    int i = queue_list[val];
-    queue_list.erase(queue_list.begin()+val);
-    
-    return i;
-}
 
-int Queue::first_choice(){
+int Queue::pick(){
     int i = queue_list[0];
     queue_list.erase(queue_list.begin());
     return i;
@@ -403,7 +366,7 @@ int Queue::size(){
 }
 
 
-void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
+void shortest_path_2D(Graph g, int s, bool display) {
     
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
@@ -433,18 +396,13 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
         counter++;
         start = Clock::now();
         start1 = Clock::now();
-        int pivot;
-        if (strategy ==1) {
-            pivot = q.first_choice();
-        } else {
-            pivot = q.random_choice();
-        }
+        int pivot = q.pick();
         total_l += q.size();
         end1 = Clock::now();
         start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
-                labels_update2(labels,g.A[pivot][succ], q);
+                labels_update(labels,g.A[pivot][succ], q);
             }
         }
         end2 = Clock::now();
@@ -483,7 +441,7 @@ void dijkstra_bin(Multigraph g, int s, int strategy, bool display) {
     
 }
 
-void dijkstra_AUC(Multigraph g, int s, bool display) {
+void shortest_path_2D_using_AUC(Graph g, int s, bool display) {
     
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
@@ -492,11 +450,11 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point(0,0,s);
 
-    std::vector<std::vector<float>> borders = dijkstra_1D(g, s);
+    std::vector<std::vector<float>> borders = initialize_shape_pareto_set(g, s);
 
     //Queue
-    Queue_priority q = Queue_priority();
-    q.push(Queue_elt(s, labels[s], borders));
+    Heap q = Heap();
+    q.push(Heap_elt(s, labels[s], borders));
 
     
 
@@ -518,7 +476,7 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
         start = Clock::now();
         start1 = Clock::now();
 
-        Queue_elt pivot = q.top();
+        Heap_elt pivot = q.top();
         q.pop();
 
 
@@ -527,7 +485,7 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
         start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot.n][succ] == 1) {
-                labels_update2_priority(labels,g.A[pivot.n][succ], q, borders);
+                labels_update_using_AUC(labels,g.A[pivot.n][succ], q, borders);
             }
         }
         end2 = Clock::now();
@@ -557,9 +515,9 @@ void dijkstra_AUC(Multigraph g, int s, bool display) {
     
 }
 
-std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s) {
+std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
     if (g.dim != 2) {
-        print_and_exit("dijkstra_1D : dimension pas égale à 2");
+        print_and_exit("initialize_shape_pareto_set : dimension pas égale à 2");
     }
 
     std::vector<std::vector<float>> dists(4, std::vector<float>(g.N, std::numeric_limits<float>::max()));
@@ -576,7 +534,7 @@ std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s) {
 
     for (int count = 0; count < g.N; ++count) {
         
-        //recherche de l'indice du minimum :
+        //finding the index of the max:
         auto it_max1 = queues[0].begin();
         float val_max1 = std::numeric_limits<float>::max();
         auto it_max2 = queues[1].begin();
@@ -598,7 +556,7 @@ std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s) {
         queues[0].erase(it_max1);
         queues[1].erase(it_max2);
 
-        //traitement des voisins :
+        //neighboors processing :
         for (int j = 0;j<g.N;j++) {
             if (g.A_bool[*it_max1][j]){
                 if (dists[0][j]>dists[0][*it_max1] +g.A[*it_max1][j].weights[0]){
@@ -613,9 +571,6 @@ std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s) {
                 }
             }
         }
-
-        
-
     }
     int ind;
     float count;

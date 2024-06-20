@@ -1,4 +1,4 @@
-#include "../include/multigraph.hpp"
+#include "../include/graph.hpp"
 #include "../include/tools.hpp"
 #include <iostream>
 
@@ -12,7 +12,9 @@ void Arc::display(){
 }
 
 
-void Multigraph::addArc(int i, int j, std::vector<float> ws) {
+
+
+void Graph::addArc(int i, int j, std::vector<float> ws) {
 
     if (i>=N || i<0 ||j>=N || j<0 ) {
         print_and_exit("addEdge : La valeur des sommets n'est pas correcte");
@@ -21,21 +23,21 @@ void Multigraph::addArc(int i, int j, std::vector<float> ws) {
         
         print_and_exit("addEdge : Le vecteur en entrée n'est pas de taille dim");
     }
-
-    ////////////////////
-
     A_bool[i][j] = 1;
     A[i][j] = Arc(i,j,ws);
     
 
 }
 
-Multigraph Multigraph::generate_graph(int N, int dim, float rho, float val_max){
-    
-    Multigraph g = Multigraph(dim,N);
 
-    std::random_device rd;  // Pour obtenir une graine aléatoire
-    std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
+
+
+Graph Graph::generate_graph_randomly(int N, int dim, float rho, float val_max){
+    
+    Graph g = Graph(dim,N);
+
+    std::random_device rd;
+    std::mt19937 gen(rd()); 
     std::uniform_real_distribution<> dis(0.0, 1.0);
     std::uniform_real_distribution<> dis_int(0, val_max);
 
@@ -52,17 +54,18 @@ Multigraph Multigraph::generate_graph(int N, int dim, float rho, float val_max){
             
         }
     }
-
-
     return g;
 }
 
-Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max){
-    
-    Multigraph g = Multigraph(dim,N);
 
-    std::random_device rd;  // Pour obtenir une graine aléatoire
-    std::mt19937 gen(rd()); // Mersenne Twister pour générer des nombres pseudo-aléatoires
+
+
+Graph Graph::generate_graph_on_grid(int N, int dim, float rho, float val_max){
+    
+    Graph g = Graph(dim,N);
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
     std::uniform_real_distribution<> dis(0.0, 1.0);
     std::uniform_real_distribution<> dis_int(0, val_max);
 
@@ -70,15 +73,9 @@ Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < N; ++j) {
             v[i][j] = dis_int(gen);
-
-
-
-           
             
         }
     }
-
-
 
     v[0][0] = 0;
     v[1][0] = 0;
@@ -98,24 +95,19 @@ Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max
     if (dim!=2) {
         print_and_exit("generate_graph_2 : fonction non prévu pour une dimension >2");
     }
-
+    
+    //adding weights
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
 
             if (dis(gen)<rho) {
-
-
                 g.A_bool[i][j] = true;
 
                 std::vector<float> ws(dim,0);
                 //hypothèse ou dim est égal à 2 :
                 ws[0] = std::sqrt((v[0][i] - v[0][j])*(v[0][i] - v[0][j]) + (v[1][i] - v[1][j])*(v[1][i] - v[1][j]));
-                //ws[1] = std::abs(v[0][i] - v[0][j]) + std::abs(v[1][i] - v[1][j]);
                 ws[1] = std::abs(v[1][i] - v[1][j])*std::abs(v[0][i] - v[0][j]);
 
-                if (j==N-1 && i == 0) {
-                    std::cout<<ws[0]<<" ------------ "<< ws[1]<<std::endl;
-                }
                 g.addArc(i,j,ws);
             } 
             
@@ -127,7 +119,9 @@ Multigraph Multigraph::generate_graph_2(int N, int dim, float rho, float val_max
 }
 
 
-Multigraph Multigraph::load_graph(std::string path) {
+
+
+Graph Graph::load_graph(std::string path) {
     std::ifstream file(path);
     if (!file.is_open()) {
         print_and_exit("load_graph : can't open the file");
@@ -145,10 +139,7 @@ Multigraph Multigraph::load_graph(std::string path) {
         iss>>dim;
     }
 
-
-    Multigraph g = Multigraph(dim, N);
-
-
+    Graph g = Graph(dim, N);
     int i,j;
     while (std::getline(file, line)) {
         std::istringstream iss(line);
@@ -169,7 +160,11 @@ Multigraph Multigraph::load_graph(std::string path) {
 
 };
 
-void Multigraph::save_graph(std::string path){
+
+
+
+
+void Graph::save_graph(std::string path){
     std::ofstream outFile(path);
     outFile<<N<<std::endl;
     outFile<<dim<<std::endl;

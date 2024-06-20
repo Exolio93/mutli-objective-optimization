@@ -83,11 +83,26 @@ CMakeFiles/dev.dir/src/alg_bin.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/dev.dir/src/alg_bin.cpp.s"
 	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\thoma\OneDrive\Documents\PRe\dev\src\alg_bin.cpp -o CMakeFiles\dev.dir\src\alg_bin.cpp.s
 
+CMakeFiles/dev.dir/src/graph.cpp.obj: CMakeFiles/dev.dir/flags.make
+CMakeFiles/dev.dir/src/graph.cpp.obj: CMakeFiles/dev.dir/includes_CXX.rsp
+CMakeFiles/dev.dir/src/graph.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev/src/graph.cpp
+CMakeFiles/dev.dir/src/graph.cpp.obj: CMakeFiles/dev.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\thoma\OneDrive\Documents\PRe\dev\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/dev.dir/src/graph.cpp.obj"
+	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/dev.dir/src/graph.cpp.obj -MF CMakeFiles\dev.dir\src\graph.cpp.obj.d -o CMakeFiles\dev.dir\src\graph.cpp.obj -c C:\Users\thoma\OneDrive\Documents\PRe\dev\src\graph.cpp
+
+CMakeFiles/dev.dir/src/graph.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/dev.dir/src/graph.cpp.i"
+	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\thoma\OneDrive\Documents\PRe\dev\src\graph.cpp > CMakeFiles\dev.dir\src\graph.cpp.i
+
+CMakeFiles/dev.dir/src/graph.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/dev.dir/src/graph.cpp.s"
+	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\thoma\OneDrive\Documents\PRe\dev\src\graph.cpp -o CMakeFiles\dev.dir\src\graph.cpp.s
+
 CMakeFiles/dev.dir/src/main.cpp.obj: CMakeFiles/dev.dir/flags.make
 CMakeFiles/dev.dir/src/main.cpp.obj: CMakeFiles/dev.dir/includes_CXX.rsp
 CMakeFiles/dev.dir/src/main.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev/src/main.cpp
 CMakeFiles/dev.dir/src/main.cpp.obj: CMakeFiles/dev.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\thoma\OneDrive\Documents\PRe\dev\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/dev.dir/src/main.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\thoma\OneDrive\Documents\PRe\dev\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/dev.dir/src/main.cpp.obj"
 	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/dev.dir/src/main.cpp.obj -MF CMakeFiles\dev.dir\src\main.cpp.obj.d -o CMakeFiles\dev.dir\src\main.cpp.obj -c C:\Users\thoma\OneDrive\Documents\PRe\dev\src\main.cpp
 
 CMakeFiles/dev.dir/src/main.cpp.i: cmake_force
@@ -97,21 +112,6 @@ CMakeFiles/dev.dir/src/main.cpp.i: cmake_force
 CMakeFiles/dev.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/dev.dir/src/main.cpp.s"
 	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\thoma\OneDrive\Documents\PRe\dev\src\main.cpp -o CMakeFiles\dev.dir\src\main.cpp.s
-
-CMakeFiles/dev.dir/src/multigraph.cpp.obj: CMakeFiles/dev.dir/flags.make
-CMakeFiles/dev.dir/src/multigraph.cpp.obj: CMakeFiles/dev.dir/includes_CXX.rsp
-CMakeFiles/dev.dir/src/multigraph.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev/src/multigraph.cpp
-CMakeFiles/dev.dir/src/multigraph.cpp.obj: CMakeFiles/dev.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Users\thoma\OneDrive\Documents\PRe\dev\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/dev.dir/src/multigraph.cpp.obj"
-	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/dev.dir/src/multigraph.cpp.obj -MF CMakeFiles\dev.dir\src\multigraph.cpp.obj.d -o CMakeFiles\dev.dir\src\multigraph.cpp.obj -c C:\Users\thoma\OneDrive\Documents\PRe\dev\src\multigraph.cpp
-
-CMakeFiles/dev.dir/src/multigraph.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/dev.dir/src/multigraph.cpp.i"
-	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\thoma\OneDrive\Documents\PRe\dev\src\multigraph.cpp > CMakeFiles\dev.dir\src\multigraph.cpp.i
-
-CMakeFiles/dev.dir/src/multigraph.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/dev.dir/src/multigraph.cpp.s"
-	C:\DevTools\MinGW\bin\c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\thoma\OneDrive\Documents\PRe\dev\src\multigraph.cpp -o CMakeFiles\dev.dir\src\multigraph.cpp.s
 
 CMakeFiles/dev.dir/src/tools.cpp.obj: CMakeFiles/dev.dir/flags.make
 CMakeFiles/dev.dir/src/tools.cpp.obj: CMakeFiles/dev.dir/includes_CXX.rsp
@@ -131,16 +131,16 @@ CMakeFiles/dev.dir/src/tools.cpp.s: cmake_force
 # Object files for target dev
 dev_OBJECTS = \
 "CMakeFiles/dev.dir/src/alg_bin.cpp.obj" \
+"CMakeFiles/dev.dir/src/graph.cpp.obj" \
 "CMakeFiles/dev.dir/src/main.cpp.obj" \
-"CMakeFiles/dev.dir/src/multigraph.cpp.obj" \
 "CMakeFiles/dev.dir/src/tools.cpp.obj"
 
 # External object files for target dev
 dev_EXTERNAL_OBJECTS =
 
 dev.exe: CMakeFiles/dev.dir/src/alg_bin.cpp.obj
+dev.exe: CMakeFiles/dev.dir/src/graph.cpp.obj
 dev.exe: CMakeFiles/dev.dir/src/main.cpp.obj
-dev.exe: CMakeFiles/dev.dir/src/multigraph.cpp.obj
 dev.exe: CMakeFiles/dev.dir/src/tools.cpp.obj
 dev.exe: CMakeFiles/dev.dir/build.make
 dev.exe: CMakeFiles/dev.dir/linkLibs.rsp

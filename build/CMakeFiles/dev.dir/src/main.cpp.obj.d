@@ -151,7 +151,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj: \
  C:/DevTools/MinGW/include/c++/13.2.0/limits \
  C:/DevTools/MinGW/include/c++/13.2.0/ctime \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/parse_numbers.h \
- C:/Users/thoma/OneDrive/Documents/PRe/dev/include/multigraph.hpp \
+ C:/Users/thoma/OneDrive/Documents/PRe/dev/include/graph.hpp \
  C:/DevTools/MinGW/include/c++/13.2.0/vector \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_uninitialized.h \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_vector.h \
@@ -194,7 +194,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj: \
  C:/DevTools/MinGW/include/c++/13.2.0/sstream \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/sstream.tcc \
  C:/Users/thoma/OneDrive/Documents/PRe/dev/include/alg_bin.hpp \
- C:/Users/thoma/OneDrive/Documents/PRe/dev/include/multigraph.hpp \
+ C:/Users/thoma/OneDrive/Documents/PRe/dev/include/graph.hpp \
  C:/Users/thoma/OneDrive/Documents/PRe/dev/include/tools.hpp \
  C:/DevTools/MinGW/include/c++/13.2.0/queue \
  C:/DevTools/MinGW/include/c++/13.2.0/deque \

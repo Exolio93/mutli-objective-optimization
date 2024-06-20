@@ -152,6 +152,30 @@ src/alg_bin.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_bin.cpp.s
 .PHONY : src/alg_bin.cpp.s
 
+src/graph.obj: src/graph.cpp.obj
+.PHONY : src/graph.obj
+
+# target to build an object file
+src/graph.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/graph.cpp.obj
+.PHONY : src/graph.cpp.obj
+
+src/graph.i: src/graph.cpp.i
+.PHONY : src/graph.i
+
+# target to preprocess a source file
+src/graph.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/graph.cpp.i
+.PHONY : src/graph.cpp.i
+
+src/graph.s: src/graph.cpp.s
+.PHONY : src/graph.s
+
+# target to generate assembly for a file
+src/graph.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/graph.cpp.s
+.PHONY : src/graph.cpp.s
+
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
 
@@ -175,30 +199,6 @@ src/main.s: src/main.cpp.s
 src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
-
-src/multigraph.obj: src/multigraph.cpp.obj
-.PHONY : src/multigraph.obj
-
-# target to build an object file
-src/multigraph.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/multigraph.cpp.obj
-.PHONY : src/multigraph.cpp.obj
-
-src/multigraph.i: src/multigraph.cpp.i
-.PHONY : src/multigraph.i
-
-# target to preprocess a source file
-src/multigraph.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/multigraph.cpp.i
-.PHONY : src/multigraph.cpp.i
-
-src/multigraph.s: src/multigraph.cpp.s
-.PHONY : src/multigraph.s
-
-# target to generate assembly for a file
-src/multigraph.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/multigraph.cpp.s
-.PHONY : src/multigraph.cpp.s
 
 src/tools.obj: src/tools.cpp.obj
 .PHONY : src/tools.obj
@@ -236,12 +236,12 @@ help:
 	@echo ... src/alg_bin.obj
 	@echo ... src/alg_bin.i
 	@echo ... src/alg_bin.s
+	@echo ... src/graph.obj
+	@echo ... src/graph.i
+	@echo ... src/graph.s
 	@echo ... src/main.obj
 	@echo ... src/main.i
 	@echo ... src/main.s
-	@echo ... src/multigraph.obj
-	@echo ... src/multigraph.i
-	@echo ... src/multigraph.s
 	@echo ... src/tools.obj
 	@echo ... src/tools.i
 	@echo ... src/tools.s

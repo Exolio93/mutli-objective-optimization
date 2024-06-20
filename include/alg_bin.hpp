@@ -1,16 +1,16 @@
 #ifndef ALG_BIN_HPP
 #define ALG_BIN_HPP
 
-#include "multigraph.hpp"
+#include "graph.hpp"
 #include "tools.hpp"
 #include<queue>
 #include<tuple>
 #include <algorithm> 
 #include<vector>
 
-std::vector<std::vector<float>> dijkstra_1D(Multigraph g, int s);
-void dijkstra_bin(Multigraph g, int s, int strategy, bool display);
-void dijkstra_AUC(Multigraph g, int s, bool display);
+std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s);
+void shortest_path_2D(Graph g, int s, bool display);
+void shortest_path_2D_using_AUC(Graph g, int s, bool display);
 
 
 class Label {
@@ -43,25 +43,25 @@ public :
     
 };
 
-class Queue_elt {
+class Heap_elt {
 public :
     int n;
     float auc;
     Label_set* l;
 
-    Queue_elt(int i, Label_set &l_set, std::vector<std::vector<float>> &borders) : n(i), l(&l_set), auc(l_set.calculate_AUC(borders, i)) {};
+    Heap_elt(int i, Label_set &l_set, std::vector<std::vector<float>> &borders) : n(i), l(&l_set), auc(l_set.calculate_AUC(borders, i)) {};
 
-    bool operator<(const Queue_elt& other) const;
+    bool operator<(const Heap_elt& other) const;
 };
 
 
-class Queue_priority {
+class Heap {
 public:
-    std::priority_queue<Queue_elt> pq;
+    std::priority_queue<Heap_elt> pq;
 
-    Queue_priority(){};
-    void push(const Queue_elt& elt);
-    Queue_elt top();
+    Heap(){};
+    void push(const Heap_elt& elt);
+    Heap_elt top();
     void pop();
     int size();
     bool empty() const;
@@ -74,10 +74,8 @@ public :
     std::vector<int> queue_list;
     Queue(){}
     void add_point(int i);
-    void remove_point(int i);
     void print();
-    int random_choice();
-    int first_choice();
+    int pick();
     int size();
 
 
@@ -86,10 +84,9 @@ public :
 
 
 void labels_update(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);
-void labels_update2(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);
-void labels_update2_priority(std::vector<Label_set> &labels, Arc &Wij,Queue_priority &queue, std::vector<std::vector<int>> &borders);
+void labels_update_using_AUC(std::vector<Label_set> &labels, Arc &Wij,Heap &queue, std::vector<std::vector<int>> &borders);
 
-bool add_pareto_set(std::vector<Label_set> &labs, Arc &Wij);
+bool merger_pareto_set(std::vector<Label_set> &labs, Arc &Wij);
 
 
 

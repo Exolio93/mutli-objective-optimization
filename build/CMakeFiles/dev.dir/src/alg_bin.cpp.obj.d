@@ -1,7 +1,7 @@
 CMakeFiles/dev.dir/src/alg_bin.cpp.obj: \
  C:\Users\thoma\OneDrive\Documents\PRe\dev\src\alg_bin.cpp \
  C:/Users/thoma/OneDrive/Documents/PRe/dev/include/alg_bin.hpp \
- C:/Users/thoma/OneDrive/Documents/PRe/dev/include/multigraph.hpp \
+ C:/Users/thoma/OneDrive/Documents/PRe/dev/include/graph.hpp \
  C:/DevTools/MinGW/include/c++/13.2.0/vector \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/requires_hosted.h \
  C:/DevTools/MinGW/include/c++/13.2.0/x86_64-w64-mingw32/bits/c++config.h \

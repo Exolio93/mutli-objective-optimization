@@ -1,5 +1,5 @@
-#ifndef MULTIGRAPH_HPP
-#define MULTIGRAPH_HPP
+#ifndef GRAPH_HPP
+#define GRAPH_HPP
 
 #include <vector>
 #include <list>
@@ -8,7 +8,6 @@
 #include <string>
 #include <sstream>
 
-// Les sommets sont des entier allant de 0 à m-1
 
 class Arc {
 public :
@@ -30,7 +29,7 @@ public :
 
 };
 
-class Multigraph {
+class Graph {
 public :
     int dim;
     int N;
@@ -38,7 +37,7 @@ public :
     std::vector<std::vector<bool>> A_bool;
 
 
-    Multigraph(int dim_size, int N_size) {
+    Graph(int dim_size, int N_size) {
         dim = dim_size;
         N = N_size;
         A.resize(N);
@@ -52,11 +51,16 @@ public :
 
     void addArc(int i, int j, std::vector<float> ws);
 
-    //rho : proportion d'arc
+    //rho : arc rate
     //val_max : max value for each component of arcs
-    static Multigraph generate_graph(int N, int dim, float rho, float val_max);
-    static Multigraph generate_graph_2(int N, int dim, float rho, float val_max);
-    static Multigraph load_graph(std::string path);
+
+    //First alg for generating a graph : random weights
+    static Graph generate_graph_randomly(int N, int dim, float rho, float val_max);
+
+    //Second alg for generating a graph : euclidean distance & another distance 
+    static Graph generate_graph_on_grid(int N, int dim, float rho, float val_max);
+    
+    static Graph load_graph(std::string path);
     void save_graph(std::string path);
     
 
