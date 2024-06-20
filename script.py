@@ -97,39 +97,72 @@ def plot_path(i):
     global N
     point = sets[-1][i]
     ind = N-1
-    while(True):
-        
+    restart = True
+    while(restart):
+        if (point[2] == 0):
+            restart = False
         plt.plot([X[ind], X[point[2]]], [Y[ind], Y[point[2]]], 'b')
         for elt in sets[point[2]]:
             
-            if(elt[0] + Ax[point[2]][ind] == point[0] and elt[1] + Ay[point[2]][ind] == point[1]):
+            if(int(elt[0] + Ax[point[2]][ind]) == int(point[0]) and int(elt[1] +Ay[point[2]][ind]) == int(point[1])):
                 print(point, elt)
-                t.sleep(1)
+                ind = point[2]
                 point = elt
                 break
-            else : 
-                print("ok")
-            
-        print("looop")
+
         
         
-        if (point[2] == 0):
-            break
         
 
 
 # # PLOT OF ALL ARCS
-# for k in range(len(arcs)):
-#     i = int(arcs[k][0])
-#     j = int(arcs[k][1])
-#     xx = []
-#     plt.plot([X[i], X[j]], [Y[i], Y[j]], 'r--')
+
+# for i in range(N):
+#     for j in range(N):
+#         if (Ax[i][j]!=0 or Ay[i][j]!=0):
+#             plt.plot([X[i], X[j]], [Y[i], Y[j]], 'r--')
 
 
-plt.scatter(X, Y, c='blue', marker='o')
-plot_path(1)
-plt.title('Graph of Points')
-plt.xlabel('X values')
-plt.ylabel('Y values')
-plt.grid(True)
+num_graphs = len(sets[-1])
+
+# Déterminez le nombre de lignes et de colonnes pour les subplots
+ncols = 3  # Par exemple, 3 colonnes
+nrows = (num_graphs + ncols - 1) // ncols  # Calcul du nombre de lignes nécessaires
+
+# Créez une figure et les subplots
+fig, axes = plt.subplots(nrows, ncols, figsize=(15, nrows * 5))
+if nrows == 1:
+    axes = axes[np.newaxis, :]
+if ncols == 1:
+    axes = axes[:, np.newaxis]
+
+# Tracer chaque graphique dans son subplot respectif
+for i in range(num_graphs - 1):
+    
+    row = i // ncols
+    col = i % ncols
+    ax = axes[row, col]
+    
+    plt.sca(axes[row, col])  # Définir le subplot actif
+    plot_path(i + 1)  # Tracer le graphique numéro i+1
+    plt.scatter(X, Y, c='red', marker='o')
+    ax.set_aspect('equal')
+    
+# Supprimez les subplots vides (si le nombre total de graphiques n'est pas un multiple de ncols)
+for j in range(num_graphs, nrows * ncols):
+    fig.delaxes(axes.flatten()[j])
+
+# Ajustez l'espacement entre les subplots
+
+
+plt.tight_layout()
 plt.show()
+
+
+# plt.scatter(X, Y, c='blue', marker='o')
+# plot_path(1)
+# plt.title('Graph of Points')
+# plt.xlabel('X values')
+# plt.ylabel('Y values')
+# plt.grid(True)
+# plt.show()
