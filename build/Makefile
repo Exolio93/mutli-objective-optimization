@@ -128,29 +128,53 @@ dev/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/build
 .PHONY : dev/fast
 
-src/alg_bin.obj: src/alg_bin.cpp.obj
-.PHONY : src/alg_bin.obj
+src/alg_1d.obj: src/alg_1d.cpp.obj
+.PHONY : src/alg_1d.obj
 
 # target to build an object file
-src/alg_bin.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_bin.cpp.obj
-.PHONY : src/alg_bin.cpp.obj
+src/alg_1d.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_1d.cpp.obj
+.PHONY : src/alg_1d.cpp.obj
 
-src/alg_bin.i: src/alg_bin.cpp.i
-.PHONY : src/alg_bin.i
+src/alg_1d.i: src/alg_1d.cpp.i
+.PHONY : src/alg_1d.i
 
 # target to preprocess a source file
-src/alg_bin.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_bin.cpp.i
-.PHONY : src/alg_bin.cpp.i
+src/alg_1d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_1d.cpp.i
+.PHONY : src/alg_1d.cpp.i
 
-src/alg_bin.s: src/alg_bin.cpp.s
-.PHONY : src/alg_bin.s
+src/alg_1d.s: src/alg_1d.cpp.s
+.PHONY : src/alg_1d.s
 
 # target to generate assembly for a file
-src/alg_bin.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_bin.cpp.s
-.PHONY : src/alg_bin.cpp.s
+src/alg_1d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_1d.cpp.s
+.PHONY : src/alg_1d.cpp.s
+
+src/alg_2d.obj: src/alg_2d.cpp.obj
+.PHONY : src/alg_2d.obj
+
+# target to build an object file
+src/alg_2d.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_2d.cpp.obj
+.PHONY : src/alg_2d.cpp.obj
+
+src/alg_2d.i: src/alg_2d.cpp.i
+.PHONY : src/alg_2d.i
+
+# target to preprocess a source file
+src/alg_2d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_2d.cpp.i
+.PHONY : src/alg_2d.cpp.i
+
+src/alg_2d.s: src/alg_2d.cpp.s
+.PHONY : src/alg_2d.s
+
+# target to generate assembly for a file
+src/alg_2d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_2d.cpp.s
+.PHONY : src/alg_2d.cpp.s
 
 src/graph.obj: src/graph.cpp.obj
 .PHONY : src/graph.obj
@@ -233,9 +257,12 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... dev
-	@echo ... src/alg_bin.obj
-	@echo ... src/alg_bin.i
-	@echo ... src/alg_bin.s
+	@echo ... src/alg_1d.obj
+	@echo ... src/alg_1d.i
+	@echo ... src/alg_1d.s
+	@echo ... src/alg_2d.obj
+	@echo ... src/alg_2d.i
+	@echo ... src/alg_2d.s
 	@echo ... src/graph.obj
 	@echo ... src/graph.i
 	@echo ... src/graph.s

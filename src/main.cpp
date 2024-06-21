@@ -2,16 +2,29 @@
 #include<chrono>
 
 #include "graph.hpp"
-#include "alg_bin.hpp"
+#include "alg_2d.hpp"
+#include "alg_1d.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
 
 int main(){
-    std::cout << "__cplusplus value: " << __cplusplus << std::endl;
 
-    int state =1;
+    int state =-1;
 
+    if (state == -1){
+        Graph g = Graph(1, 4);
+
+        g.addArc(0,1,{4});
+        g.addArc(0,2,{3});
+        g.addArc(1,3,{6});    
+        g.addArc(1,2,{2});
+        g.addArc(2,3,{1.1});
+
+        dijkstra(g,0);
+        bellmanFord(g,0);
+        return 0;
+    }
 
     if (state == 0) {
         Graph g = Graph(2, 4);

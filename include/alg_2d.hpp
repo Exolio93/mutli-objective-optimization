@@ -1,5 +1,5 @@
-#ifndef ALG_BIN_HPP
-#define ALG_BIN_HPP
+#ifndef ALG_2D_HPP
+#define ALG_2D_HPP
 
 #include "graph.hpp"
 #include "tools.hpp"
@@ -18,7 +18,7 @@ public :
     float x;
     float y;
     int pred;
-
+    
     float getX() const;
     float getY() const;
     int getPred() const;

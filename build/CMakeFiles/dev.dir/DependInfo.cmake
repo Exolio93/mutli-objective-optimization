@@ -8,7 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/alg_bin.cpp" "CMakeFiles/dev.dir/src/alg_bin.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/alg_bin.cpp.obj.d"
+  "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/alg_1d.cpp" "CMakeFiles/dev.dir/src/alg_1d.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/alg_1d.cpp.obj.d"
+  "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/alg_2d.cpp" "CMakeFiles/dev.dir/src/alg_2d.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/alg_2d.cpp.obj.d"
   "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/graph.cpp" "CMakeFiles/dev.dir/src/graph.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/graph.cpp.obj.d"
   "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/main.cpp" "CMakeFiles/dev.dir/src/main.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/main.cpp.obj.d"
   "C:/Users/thoma/OneDrive/Documents/PRe/dev/src/tools.cpp" "CMakeFiles/dev.dir/src/tools.cpp.obj" "gcc" "CMakeFiles/dev.dir/src/tools.cpp.obj.d"

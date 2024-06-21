@@ -1,4 +1,4 @@
-#include "../include/alg_bin.hpp"
+#include "../include/alg_2d.hpp"
 #include<chrono>
 using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
