@@ -428,7 +428,7 @@ void shortest_path_2D(Graph g, int s, bool display) {
         }
     }
 
-    std::ofstream outFile("../save/graph_to_plot/solution");
+    std::ofstream outFile("../save/test/solution");
     outFile<<g.N<<std::endl;
     for (int i = 0;i<g.N;i++) {
         for(auto it = labels[i].set.begin();it!=labels[i].set.end();++it) {

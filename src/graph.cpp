@@ -69,10 +69,17 @@ Graph Graph::generate_graph_on_grid(int N, int dim, float rho, float val_max){
     std::uniform_real_distribution<> dis(0.0, 1.0);
     std::uniform_real_distribution<> dis_int(0, val_max);
 
-    std::vector<std::vector<float>> v(dim, std::vector<float>(N,0));
+    std::vector<std::vector<float>> v(2, std::vector<float>(N,0));
     for (int i = 0; i < 2; ++i) {
         for (int j = 0; j < N; ++j) {
             v[i][j] = dis_int(gen);
+            
+        }
+    }
+    std::vector<std::vector<float>> attractive_points(2, std::vector<float>(dim-1,0));
+    for (int i = 0; i < 2; ++i) {
+        for (int j = 0; j < dim-1; ++j) {
+            attractive_points[i][j] = dis_int(gen);
             
         }
     }
@@ -82,31 +89,40 @@ Graph Graph::generate_graph_on_grid(int N, int dim, float rho, float val_max){
     v[0][N-1] = val_max;
     v[1][N-1] = val_max;
 
-    // std::ofstream outFile("../save/graph_to_plot/map");
-    // outFile<<N<<std::endl;
-    // outFile<<val_max<<std::endl;
+    std::ofstream outFile("../save/test/map");
+    outFile<<N<<std::endl;
+    outFile<<val_max<<std::endl;
 
-    // for(int j = 0;j<N;++j) {
-    //     outFile<<j<<" "<<v[0][j]<< " "<<v[1][j];
-    //     outFile<<std::endl;
-    // }
-
-
-    if (dim!=2) {
-        print_and_exit("generate_graph_2 : fonction non prévu pour une dimension >2");
+    for(int j = 0;j<N;++j) {
+        outFile<<j<<" "<<v[0][j]<< " "<<v[1][j];
+        outFile<<std::endl;
     }
+
+    for(int j = 0;j<dim-1;++j) {
+        outFile<<j<<" "<<attractive_points[0][j]<< " "<<attractive_points[1][j];
+        outFile<<std::endl;
+    }
+
+
     
     //adding weights
     for (int i = 0; i < N; ++i) {
         for (int j = 0; j < N; ++j) {
 
-            if (dis(gen)<rho) {
+            if (dis(gen)<rho and i!=j) {
                 g.A_bool[i][j] = true;
 
                 std::vector<float> ws(dim,0);
                 //hypothèse ou dim est égal à 2 :
                 ws[0] = std::sqrt((v[0][i] - v[0][j])*(v[0][i] - v[0][j]) + (v[1][i] - v[1][j])*(v[1][i] - v[1][j]));
-                ws[1] = std::abs(v[1][i] - v[1][j])*std::abs(v[0][i] - v[0][j]);
+                for(int k = 0; k<dim-1;++k) {
+                    float d1 = std::sqrt((v[0][i] - attractive_points[0][k])*(v[0][i] - attractive_points[0][k]) 
+                    + (v[1][i] - attractive_points[1][k])*(v[1][i] - attractive_points[1][k]));
+                    float d2 = std::sqrt((v[0][j] - attractive_points[0][k])*(v[0][j] - attractive_points[0][k]) 
+                    + (v[1][j] - attractive_points[1][k])*(v[1][j] - attractive_points[1][k]));
+                    ws[k+1] = (d1 + d2)/2;
+
+                }
 
                 g.addArc(i,j,ws);
             } 

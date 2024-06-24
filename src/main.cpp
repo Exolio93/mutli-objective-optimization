@@ -10,7 +10,7 @@ using Duration = std::chrono::duration<double>;
 
 int main(){
 
-    int state =-1;
+    int state =2;
 
     if (state == -1){
         Graph g = Graph(1, 4);
@@ -76,10 +76,8 @@ int main(){
 
     }
     if (state == 2) {
-        Graph::generate_graph_randomly(200,2,0.3,20).save_graph("../save/temp/2_200_30");
-        Graph::generate_graph_randomly(200,2,0.5,20).save_graph("../save/temp/2_200_50");
-        Graph::generate_graph_randomly(200,2,0.7,20).save_graph("../save/temp/2_200_70");
-
+        Graph g = Graph::load_graph("../save/test/2_20_20");
+        shortest_path_2D(g, 0, false);
     }
     if (state == 3) {
         Label_set l = Label_set();
