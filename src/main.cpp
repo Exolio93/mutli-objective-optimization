@@ -2,6 +2,7 @@
 #include<chrono>
 
 #include "graph.hpp"
+#include "data_struct_2d.hpp"
 #include "alg_2d.hpp"
 #include "alg_1d.hpp"
 
@@ -10,7 +11,7 @@ using Duration = std::chrono::duration<double>;
 
 int main(){
 
-    int state =2;
+    int state =1;
 
     if (state == -1){
         Graph g = Graph(1, 4);

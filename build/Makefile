@@ -176,6 +176,30 @@ src/alg_2d.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/alg_2d.cpp.s
 .PHONY : src/alg_2d.cpp.s
 
+src/data_struct_2d.obj: src/data_struct_2d.cpp.obj
+.PHONY : src/data_struct_2d.obj
+
+# target to build an object file
+src/data_struct_2d.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/data_struct_2d.cpp.obj
+.PHONY : src/data_struct_2d.cpp.obj
+
+src/data_struct_2d.i: src/data_struct_2d.cpp.i
+.PHONY : src/data_struct_2d.i
+
+# target to preprocess a source file
+src/data_struct_2d.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/data_struct_2d.cpp.i
+.PHONY : src/data_struct_2d.cpp.i
+
+src/data_struct_2d.s: src/data_struct_2d.cpp.s
+.PHONY : src/data_struct_2d.s
+
+# target to generate assembly for a file
+src/data_struct_2d.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\dev.dir\build.make CMakeFiles/dev.dir/src/data_struct_2d.cpp.s
+.PHONY : src/data_struct_2d.cpp.s
+
 src/graph.obj: src/graph.cpp.obj
 .PHONY : src/graph.obj
 
@@ -263,6 +287,9 @@ help:
 	@echo ... src/alg_2d.obj
 	@echo ... src/alg_2d.i
 	@echo ... src/alg_2d.s
+	@echo ... src/data_struct_2d.obj
+	@echo ... src/data_struct_2d.i
+	@echo ... src/data_struct_2d.s
 	@echo ... src/graph.obj
 	@echo ... src/graph.i
 	@echo ... src/graph.s
