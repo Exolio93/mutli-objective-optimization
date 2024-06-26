@@ -202,6 +202,8 @@ CMakeFiles/dev.dir/src/alg_2d.cpp.obj: \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/algorithmfwd.h \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_tempbuf.h \
  C:/DevTools/MinGW/include/c++/13.2.0/pstl/glue_algorithm_defs.h \
+ C:/DevTools/MinGW/include/c++/13.2.0/stack \
+ C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h \
  C:/DevTools/MinGW/include/c++/13.2.0/chrono \
  C:/DevTools/MinGW/include/c++/13.2.0/bits/chrono.h \
  C:/DevTools/MinGW/include/c++/13.2.0/ratio \

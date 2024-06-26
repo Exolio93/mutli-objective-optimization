@@ -269,6 +269,7 @@ CMakeFiles/dev.dir/src/alg_2d.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_numeric.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_pair.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_queue.h \
+  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_tempbuf.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_uninitialized.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_vector.h \
@@ -322,6 +323,7 @@ CMakeFiles/dev.dir/src/alg_2d.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev
   C:/DevTools/MinGW/include/c++/13.2.0/random \
   C:/DevTools/MinGW/include/c++/13.2.0/ratio \
   C:/DevTools/MinGW/include/c++/13.2.0/sstream \
+  C:/DevTools/MinGW/include/c++/13.2.0/stack \
   C:/DevTools/MinGW/include/c++/13.2.0/stdexcept \
   C:/DevTools/MinGW/include/c++/13.2.0/stdlib.h \
   C:/DevTools/MinGW/include/c++/13.2.0/streambuf \
@@ -877,6 +879,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev/s
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_numeric.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_pair.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_queue.h \
+  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_tempbuf.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_uninitialized.h \
   C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_vector.h \
@@ -930,6 +933,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj: C:/Users/thoma/OneDrive/Documents/PRe/dev/s
   C:/DevTools/MinGW/include/c++/13.2.0/random \
   C:/DevTools/MinGW/include/c++/13.2.0/ratio \
   C:/DevTools/MinGW/include/c++/13.2.0/sstream \
+  C:/DevTools/MinGW/include/c++/13.2.0/stack \
   C:/DevTools/MinGW/include/c++/13.2.0/stdexcept \
   C:/DevTools/MinGW/include/c++/13.2.0/stdlib.h \
   C:/DevTools/MinGW/include/c++/13.2.0/streambuf \
@@ -1175,6 +1179,8 @@ C:/DevTools/MinGW/include/c++/13.2.0/ctime:
 
 C:/DevTools/MinGW/include/c++/13.2.0/chrono:
 
+C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h:
+
 C:/DevTools/MinGW/include/c++/13.2.0/bits/algorithmfwd.h:
 
 C:/Users/thoma/OneDrive/Documents/PRe/dev/src/alg_2d.cpp:
@@ -1310,6 +1316,8 @@ C:/DevTools/MinGW/include/c++/13.2.0/bits/nested_exception.h:
 C:/DevTools/MinGW/include/c++/13.2.0/typeinfo:
 
 C:/DevTools/MinGW/include/c++/13.2.0/bits/codecvt.h:
+
+C:/DevTools/MinGW/include/c++/13.2.0/stack:
 
 C:/DevTools/MinGW/include/c++/13.2.0/bits/allocator.h:
 

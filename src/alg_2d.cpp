@@ -66,7 +66,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
         && (*it_j).getY() < (*it_i).getY()+ Wij.weights[1]){
     
             add2queue = true;
-            new_label_set.add_point_at_end(    Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from)   );
+            new_label_set.add_point_at_end(    Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from, &(*it_i))   );
             it_i++;
         }
 
@@ -91,7 +91,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
         if(new_label_set.set.empty()){
             while(it_i!=labs[Wij.n_from].set.end()) {
                 
-                new_label_set.add_point_at_end( Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from) );
+                new_label_set.add_point_at_end( Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from, &(*it_i)) );
                 add2queue = true;
                 it_i++;
                 
@@ -103,7 +103,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
             Label last = new_label_set.get_last();
             while(it_i!=labs[Wij.n_from].set.end()) {
                 if (last.getY()>(*it_i).getY()) {
-                    new_label_set.add_point_at_end(  Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from)  );
+                    new_label_set.add_point_at_end(  Label((*it_i).getX() + Wij.weights[0],(*it_i).getY() + Wij.weights[1],Wij.n_from, &(*it_i))  );
                     add2queue = true;
                     
                 }
@@ -139,14 +139,14 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
 
 
-void shortest_path_2D(Graph g, int s, bool display) {
+std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
     }
     //Labels
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
-    labels[s].add_point(0,0,s);
+    labels[s].add_point(0,0,s,nullptr);
 
     //Queue
     Queue q = Queue(g.N);
@@ -212,19 +212,20 @@ void shortest_path_2D(Graph g, int s, bool display) {
     //     }
     //     outFile<<"*"<<std::endl;
     // }
+    return labels;
     
     
     
 }
 
-void shortest_path_2D_using_AUC(Graph g, int s, bool display) {
+std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) {
     
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
     }
     //Labels
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
-    labels[s].add_point(0,0,s);
+    labels[s].add_point(0,0,s, nullptr);
 
     std::vector<std::vector<float>> borders = initialize_shape_pareto_set(g, s);
 
@@ -279,17 +280,43 @@ void shortest_path_2D_using_AUC(Graph g, int s, bool display) {
     <<"counter : "<<counter
     <<std::endl;
 
-    if (display) {
-        for(int i =0; i<g.N; ++i) {
-            std::cout<<"|||||||||||||||||||"<<std::endl;
-            std::cout<<"NODE "<<i<<std::endl;
-            labels[i].print();
-        }
-    }
+    return labels;
     
     
     
 }
+
+
+
+void print_path_from_solution(std::vector<Label_set> labels, int i){
+    std::stack<int> nodes;
+
+    for(auto it = labels[i].set.begin(); it != labels[i].set.end();++it) {
+        std::cout<<"x : "<< (*it).getX() << ", y : "<<(*it).getY()<<std::endl;
+        
+        Label lab_pivot = (*it);
+
+        nodes.push(i);
+
+        while(true) {
+            if(lab_pivot.getLabelPred()==nullptr) {
+                break;
+            }
+            nodes.push(lab_pivot.getPred());
+            lab_pivot = *lab_pivot.getLabelPred();        
+        }
+        while (!nodes.empty())
+        {
+        
+            std::cout<<nodes.top()<<">";
+            nodes.pop();
+        }  
+        std::cout<<std::endl; 
+
+
+    }
+}
+
 
 std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
     if (g.dim != 2) {

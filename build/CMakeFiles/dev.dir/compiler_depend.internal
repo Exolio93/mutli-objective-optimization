@@ -271,6 +271,7 @@ CMakeFiles/dev.dir/src/alg_2d.cpp.obj
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_numeric.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_pair.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_queue.h
+ C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_tempbuf.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_uninitialized.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_vector.h
@@ -324,6 +325,7 @@ CMakeFiles/dev.dir/src/alg_2d.cpp.obj
  C:/DevTools/MinGW/include/c++/13.2.0/random
  C:/DevTools/MinGW/include/c++/13.2.0/ratio
  C:/DevTools/MinGW/include/c++/13.2.0/sstream
+ C:/DevTools/MinGW/include/c++/13.2.0/stack
  C:/DevTools/MinGW/include/c++/13.2.0/stdexcept
  C:/DevTools/MinGW/include/c++/13.2.0/stdlib.h
  C:/DevTools/MinGW/include/c++/13.2.0/streambuf
@@ -882,6 +884,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_numeric.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_pair.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_queue.h
+ C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_stack.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_tempbuf.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_uninitialized.h
  C:/DevTools/MinGW/include/c++/13.2.0/bits/stl_vector.h
@@ -935,6 +938,7 @@ CMakeFiles/dev.dir/src/main.cpp.obj
  C:/DevTools/MinGW/include/c++/13.2.0/random
  C:/DevTools/MinGW/include/c++/13.2.0/ratio
  C:/DevTools/MinGW/include/c++/13.2.0/sstream
+ C:/DevTools/MinGW/include/c++/13.2.0/stack
  C:/DevTools/MinGW/include/c++/13.2.0/stdexcept
  C:/DevTools/MinGW/include/c++/13.2.0/stdlib.h
  C:/DevTools/MinGW/include/c++/13.2.0/streambuf

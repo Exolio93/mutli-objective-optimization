@@ -10,6 +10,9 @@ float Label::getY() const{
 int Label::getPred() const{
     return pred;
 }
+Label* Label::getLabelPred() const{
+    return label_pred;
+}
 
 void Label_set::print(){
     std::cout<<"-----"<<std::endl;
@@ -20,7 +23,7 @@ void Label_set::print(){
 
 }
  
-bool Label_set::add_point(float x, float y,  int pred){
+bool Label_set::add_point(float x, float y,  int pred, Label* lab){
     
     /*
     1 - On le place dans la liste selon sa coordonnée x
@@ -36,7 +39,7 @@ bool Label_set::add_point(float x, float y,  int pred){
 
 
     if (set.size() == 0) {
-        set.push_back(Label(x,y,pred)); 
+        set.push_back(Label(x,y,pred, lab)); 
         return true;     
     }
 
@@ -73,7 +76,7 @@ bool Label_set::add_point(float x, float y,  int pred){
         if (y>= (*(std::prev(set.end()))).getY()) {
             return false;
         }
-        set.push_back(Label(x,y,pred)); 
+        set.push_back(Label(x,y,pred,lab)); 
         return true;
     }
 
@@ -85,16 +88,16 @@ bool Label_set::add_point(float x, float y,  int pred){
         }
 
         if(y>(*next_it).getY()) {
-            set.insert(next_it,Label(x,y,pred));
+            set.insert(next_it,Label(x,y,pred,lab));
             return true;
         }
         if(y == (*next_it).getY()) {
             
-            *next_it = Label(x,y,pred);
+            *next_it = Label(x,y,pred,lab);
             return true;
         }
         if(y< (*next_it).getY()) {
-            *next_it = Label(x,y,pred);
+            *next_it = Label(x,y,pred,lab);
         
             while(i+2< set.size() && y<= (*next_next_it).getY()) {
                 set.erase(next_next_it);
@@ -110,7 +113,7 @@ bool Label_set::add_point(float x, float y,  int pred){
             return false;
         }
         if(y<(*it).getY()) {
-            *it = Label(x,y,pred);
+            *it = Label(x,y,pred,lab);
             while(i+1< set.size() && y<= (*next_it).getY()) {
                 set.erase(next_it);
                 ++next_it;
@@ -154,7 +157,6 @@ float Label_set::calculate_AUC(std::vector<std::vector<float>> &borders, int i){
     return auc;
 
 };
-
 
 bool Heap_elt::operator<(const Heap_elt& other) const {
     return auc < other.auc;

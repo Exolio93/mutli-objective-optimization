@@ -11,7 +11,7 @@ using Duration = std::chrono::duration<double>;
 
 int main(){
 
-    int state =1;
+    int state =2;
 
     if (state == -1){
         Graph g = Graph(1, 4);
@@ -36,8 +36,14 @@ int main(){
         g.addArc(1,2,{2,2});
         g.addArc(2,3,{1.1,2.1});
 
-        shortest_path_2D(g,0,true);
+        std::vector<Label_set> labs = shortest_path_2D(g,0,false);
+        print_path_from_solution(labs, 3);
+
+
         return 0;
+
+
+
 
     }
     if (state == 1) {
@@ -77,21 +83,22 @@ int main(){
 
     }
     if (state == 2) {
-        Graph g = Graph::load_graph("../save/test/2_20_20");
-        shortest_path_2D(g, 0, false);
-    }
-    if (state == 3) {
-        Label_set l = Label_set();
-        l.add_point(2,4,0);
-        std::vector<std::vector<float>> v = {{1},{1},{6},{6}};
-        std::cout<<l.calculate_AUC(v,0)<<std::endl;
+        Graph g = Graph::load_graph("../save/graph_to_plot/2_20_50");
+
+        auto lab1 = shortest_path_2D(g, 0, false);
+        auto lab2 = shortest_path_2D_using_AUC(g,0,false);
+        
+        std::cout<<"\n\nFIFO : "<<std::endl;
+        print_path_from_solution(lab1,19);
+
+        std::cout<<"\n\nHyper volume"<<std::endl;
+        print_path_from_solution(lab2,19);
 
     }
-    if (state == 4) {
-        Graph::generate_graph_on_grid(200, 2, 0.1, 100).save_graph("../save/dataset_2/2_200_10");
-        Graph::generate_graph_on_grid(500, 2, 0.1, 100).save_graph("../save/dataset_2/2_500_10");
-        Graph::generate_graph_on_grid(1000, 2, 0.1, 100).save_graph("../save/dataset_2/2_1000_10");
-        Graph::generate_graph_on_grid(2000, 2, 0.1, 100).save_graph("../save/dataset_2/2_2000_10");
+
+    if (state == 3) {
+        Graph::generate_graph_on_grid(20, 2, 0.1, 100).save_graph("../save/dataset_2/2_20_10");
+        Graph::generate_graph_on_grid(50, 2, 0.1, 100).save_graph("../save/dataset_2/2_50_10");
     }
     
 

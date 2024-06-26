@@ -13,12 +13,13 @@ public :
     float x;
     float y;
     int pred;
+    Label* label_pred;
     
     float getX() const;
     float getY() const;
     int getPred() const;
-
-    Label(float _x, float _y, int _pred) {x = _x; y=_y; pred = _pred;}
+    Label* getLabelPred() const;
+    Label(float _x, float _y, int _pred, Label* lab) {x = _x; y=_y; pred = _pred; label_pred = lab;}
 };
 
 class Label_set {
@@ -28,7 +29,7 @@ public :
     Label_set(){};
 
     //Renvoie True si le point a été ajouté et qu'il n'y était pas avant
-    bool add_point(float x, float y , int pred);
+    bool add_point(float x, float y , int pred, Label* lab);
     void print();
     void add_point_at_end(Label label);
     float calculate_AUC(std::vector<std::vector<float>> &borders, int i);
