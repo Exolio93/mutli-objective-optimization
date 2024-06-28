@@ -1,16 +1,17 @@
-Compilation and execution with MinGW:
+## Compilation with MinGW:
 
 cd build
 cmake -G "MinGW Makefiles" ..
 mingw32-make
-dev.exe
 
+## Execution
 
-##############################################
+dev.exe path alg s t
 
-Dijkstra dim = 2 :
-------------------
-100 nodes | 50% of arcs
+Where : 
+- path is the string for loading the graph
+- alg is the choice of the alg : 0 for FIFO, 1 for Hyper volume
+- s is the source node
+- t is the objective node
 
-Random choice for pivot : ~8,3s
-Max it choice for pivot : ~10,00s
+Example : dev.exe "../save/temp/small_graph" 0 0 3
