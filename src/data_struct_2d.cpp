@@ -1,6 +1,7 @@
 #include "../include/data_struct_2d.hpp"
 #include<chrono>
 
+
 float Label::getX() const{
     return x;
 }
@@ -219,4 +220,35 @@ int Queue::pick(){
 
 int Queue::size(){
     return queue_list.size();
+}
+
+
+void BinaryTree::addInternalNode(int x, int y, std::shared_ptr<TreeNode> parent, bool isLeft) {
+    auto node = std::make_shared<TreeNode>(x, y);
+    if (isLeft) {
+        parent->left = node;
+    } else {
+        parent->right = node;
+    }
+}
+
+void BinaryTree::addLeaf(const Label& lbl, std::shared_ptr<TreeNode> parent, bool isLeft) {
+    auto leaf = std::make_shared<TreeNode>(lbl);
+    if (isLeft) {
+        parent->left = leaf;
+    } else {
+        parent->right = leaf;
+    }
+}
+
+// Parcours en ordre pour afficher les valeurs
+void BinaryTree::inorderTraversal(std::shared_ptr<TreeNode> node) {
+    if (!node) return;
+    inorderTraversal(node->left);
+    if (node->label) {
+        std::cout << "Label: " << node->label->getX() << ", " << node->label->getY() << std::endl;
+    } else {
+        std::cout << "Internal Node: (" << node->coords.first << ", " << node->coords.second << ")" << std::endl;
+    }
+    inorderTraversal(node->right);
 }

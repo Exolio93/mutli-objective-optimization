@@ -154,6 +154,7 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
 
 
     float counter = 0;
+    float counter2 = 0;
     float total_l =1;
     auto start = Clock::now();
     auto end = Clock::now();
@@ -161,12 +162,15 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     auto end1 = Clock::now();
     auto start2 = Clock::now();
     auto end2 = Clock::now();
+    auto start3 = Clock::now();
+    auto end3 = Clock::now();
 
-    auto durations = std::vector<Duration>(3,Duration(0));
+    auto durations = std::vector<Duration>(4,Duration(0));
 
-
+    int av_size = 0;
     while(q.size() >0) {
         counter++;
+        
         start = Clock::now();
         start1 = Clock::now();
         int pivot = q.pick();
@@ -175,7 +179,13 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
         start2 = Clock::now();
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
+                counter2++;
+                av_size += labels[pivot].set.size();
+                av_size += labels[succ].set.size();
+                start3 = Clock::now();
                 labels_update(labels,g.A[pivot][succ], q);
+                end3 = Clock::now();
+                durations[3] += end3-start3;
             }
         }
         end2 = Clock::now();
@@ -193,7 +203,9 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
     << "\nupdate : "<<durations[2].count()/durations[0].count()
     <<"\naverage total : "<<total_l/counter
-    <<"counter : "<<counter
+    <<"\ncounter : "<<counter
+    <<"\nAv size label_set :"<<av_size/(counter2*2)
+    <<"\nAv time for fusion of 2 p.set:"<<durations[3].count()
     <<std::endl;
 
     if (display) {

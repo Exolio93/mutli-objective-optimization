@@ -12,7 +12,7 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =0;
+        int state =3;
 
 
         if (state == 0) {
@@ -80,8 +80,9 @@ int main(int argc, char* argv[]){
         }
 
         if (state == 3) {
-            Graph::generate_graph_on_grid(20, 2, 0.1, 100).save_graph("../save/dataset_2/2_20_10");
-            Graph::generate_graph_on_grid(50, 2, 0.1, 100).save_graph("../save/dataset_2/2_50_10");
+            Graph::generate_graph_on_grid(1000, 2, 0.7, 100).save_graph("../save/dataset_2/2_1000_70");
+            Graph::generate_graph_on_grid(2000, 2, 0.7, 100).save_graph("../save/dataset_2/2_2000_70");
+            Graph::generate_graph_on_grid(2000, 2, 0.5, 100).save_graph("../save/dataset_2/2_2000_50");
         }
     }
 

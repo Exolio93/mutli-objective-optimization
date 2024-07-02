@@ -7,6 +7,8 @@
 #include<tuple>
 #include <algorithm> 
 #include<vector>
+#include <variant>
+#include <memory>
 
 class Label {
 public :
@@ -76,5 +78,40 @@ public :
 
 
 };
+
+
+
+struct TreeNode {
+    std::pair<int, int> coords;
+    std::unique_ptr<Label> label;  // Pointeur unique vers Label si le noeud est une feuille
+    std::shared_ptr<TreeNode> left;
+    std::shared_ptr<TreeNode> right;
+
+    // Constructeur pour les noeuds internes
+    TreeNode(int x, int y)
+        : coords(std::make_pair(x, y)), label(nullptr), left(nullptr), right(nullptr) {}
+
+    // Constructeur pour les feuilles
+    TreeNode(const Label& lbl)
+        : coords(std::make_pair(lbl.getX(), lbl.getY())), label(std::make_unique<Label>(lbl)), left(nullptr), right(nullptr) {}
+};
+
+class BinaryTree {
+public:
+    std::shared_ptr<TreeNode> root;
+
+    BinaryTree() : root(nullptr) {}
+
+    // Méthode pour ajouter un noeud interne
+    void addInternalNode(int x, int y, std::shared_ptr<TreeNode> parent, bool isLeft);
+
+    // Méthode pour ajouter une feuille
+    void addLeaf(const Label& lbl, std::shared_ptr<TreeNode> parent, bool isLeft);
+
+    // Parcours en ordre pour afficher les valeurs
+    void inorderTraversal(std::shared_ptr<TreeNode> node);
+};
+
+
 
 #endif
