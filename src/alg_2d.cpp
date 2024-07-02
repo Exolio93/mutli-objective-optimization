@@ -229,7 +229,7 @@ std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) 
 
     std::vector<std::vector<float>> borders = initialize_shape_pareto_set(g, s);
 
-    //Queue
+    //Queue 
     Heap q = Heap(g.N);
     q.push(Heap_elt(s, labels[s], borders));
 
