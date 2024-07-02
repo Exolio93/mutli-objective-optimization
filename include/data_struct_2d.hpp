@@ -54,8 +54,8 @@ public :
 class Heap {
 public:
     std::priority_queue<Heap_elt> pq;
-
-    Heap(){};
+    std::vector<bool> node_bool;
+    Heap(int N){node_bool = std::vector<bool>(N,false);};
     void push(const Heap_elt& elt);
     Heap_elt top();
     void pop();
@@ -67,11 +67,10 @@ public:
 
 class Queue {
 public :
-    std::vector<int> queue_list;
+    std::queue<int> queue_list;
     std::vector<bool> node_bool;
     Queue(int N){node_bool = std::vector<bool>(N,false);}
     void add_point(int i);
-    void print();
     int pick();
     int size();
 

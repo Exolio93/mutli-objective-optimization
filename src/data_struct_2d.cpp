@@ -171,6 +171,10 @@ Heap_elt Heap::top() {
 };
 
 void Heap::push(const Heap_elt& elt) {
+    if(node_bool[elt.n] == true){
+        return;
+    }
+    node_bool[elt.n] = true;
     pq.push(elt);
 };
 
@@ -180,6 +184,7 @@ int Heap::size(){
 
 void Heap::pop() {
     if (!pq.empty()) {
+        node_bool[pq.top().n] = 0;
         pq.pop();
     } else {
         throw std::out_of_range("La queue est vide");
@@ -197,23 +202,17 @@ void Queue::add_point(int i){
         return;
     }
     node_bool[i] = true;
-    queue_list.push_back(i);
+    queue_list.push(i);
     return;
 
 
 };
 
-void Queue::print() {
-    std::cout<<"print :"<<std::endl;
-    for(int k = 0;k<queue_list.size();k++){
-        std::cout<< queue_list[k]<<std::endl;
-    }
-}
 
 
 int Queue::pick(){
-    int i = queue_list[0];
-    queue_list.erase(queue_list.begin());
+    int i = queue_list.front();
+    queue_list.pop();
     node_bool[i] = false;
     return i;
 }

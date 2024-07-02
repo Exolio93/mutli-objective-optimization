@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 
 
         if (state == 0) {
-            Graph g = Graph::load_graph("../save/temp/small_graph");
+            Graph g = Graph::load_graph("../save/graph_to_plot/2_20_50");
 
             std::vector<Label_set> labs = shortest_path_2D(g,0,false);
             print_path_from_solution(labs, 3);
