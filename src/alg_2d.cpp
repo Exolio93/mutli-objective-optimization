@@ -141,16 +141,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
 std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     
-    if (g.dim !=2) {
-        print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
-    }
-    //Labels
-    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
-    labels[s].add_point(0,0,s,nullptr);
-
-    //Queue
-    Queue q = Queue(g.N);
-    q.add_point(s);
+    
 
 
     float counter = 0;
@@ -165,13 +156,29 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     auto start3 = Clock::now();
     auto end3 = Clock::now();
 
-    auto durations = std::vector<Duration>(4,Duration(0));
+    auto durations = std::vector<Duration>(5,Duration(0));
 
     int av_size = 0;
+
+    start = Clock::now();
+
+    if (g.dim !=2) {
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
+    }
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point(0,0,s,nullptr);
+
+    //Queue
+    Queue q = Queue(g.N);
+    q.add_point(s);
+
+
+    
     while(q.size() >0) {
         counter++;
         
-        start = Clock::now();
+        
         start1 = Clock::now();
         int pivot = q.pick();
         total_l += q.size();
@@ -180,8 +187,6 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
         for (int succ = 0;succ<g.N; ++succ) {
             if(g.A_bool[pivot][succ] == 1) {
                 counter2++;
-                av_size += labels[pivot].set.size();
-                av_size += labels[succ].set.size();
                 start3 = Clock::now();
                 labels_update(labels,g.A[pivot][succ], q);
                 end3 = Clock::now();
@@ -189,23 +194,26 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
             }
         }
         end2 = Clock::now();
-        end = Clock::now();
-
-        durations[0] += end - start;
+        
         durations[1] += end1 - start1;
         durations[2] += end2 - start2;
 
     }
+    end = Clock::now();
+    durations[0] = end - start;
 
     /////////////////////////////////
 
     std::cout
-    <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
-    << "\nupdate : "<<durations[2].count()/durations[0].count()
-    <<"\naverage total : "<<total_l/counter
-    <<"\ncounter : "<<counter
+    
+    <<"\nTotal time: "<<durations[0].count()
+    <<"\n\% for queue : "<<durations[1].count()/durations[0].count()
+    << "\n\% for travel neighbors : "<<(durations[2].count()-durations[3].count())/durations[0].count()
+    << "\n\% for update a labels : "<<durations[3].count()/durations[0].count()
+    <<"\naverage size of queue : "<<total_l/counter
+    <<"\niteration of while loop : "<<counter
     <<"\nAv size label_set :"<<av_size/(counter2*2)
-    <<"\nAv time for fusion of 2 p.set:"<<durations[3].count()
+    
     <<std::endl;
 
     if (display) {
