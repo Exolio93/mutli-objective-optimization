@@ -23,9 +23,7 @@ void Graph::addArc(int i, int j, std::vector<float> ws) {
         
         print_and_exit("addEdge : Le vecteur en entrée n'est pas de taille dim");
     }
-    A_bool[i][j] = 1;
-    A[i][j] = Arc(i,j,ws);
-    
+    A[i].push_back(Arc(i,j,ws));
 
 }
 
@@ -45,7 +43,6 @@ Graph Graph::generate_graph_randomly(int N, int dim, float rho, float val_max){
         for (int j = 0; j < N; ++j) {
 
             if (dis(gen)<rho) {
-                g.A_bool[i][j] = true;
 
                 std::vector<float> ws(dim,0);
                 for(int k =0;k<dim;++k){ws[k] = dis_int(gen);}
@@ -110,8 +107,6 @@ Graph Graph::generate_graph_on_grid(int N, int dim, float rho, float val_max){
         for (int j = 0; j < N; ++j) {
 
             if (dis(gen)<rho and i!=j) {
-                g.A_bool[i][j] = true;
-
                 std::vector<float> ws(dim,0);
                 //hypothèse ou dim est égal à 2 :
                 ws[0] = std::sqrt((v[0][i] - v[0][j])*(v[0][i] - v[0][j]) + (v[1][i] - v[1][j])*(v[1][i] - v[1][j]));
@@ -165,7 +160,6 @@ Graph Graph::load_graph(std::string path) {
         while (iss >> number) {
             ws.push_back(number);
         }
-
         g.addArc(i,j,ws);
     }
 
@@ -176,7 +170,15 @@ Graph Graph::load_graph(std::string path) {
 
 };
 
-
+Arc Graph::getArc(int i, int j) {
+    for (auto it = A[i].begin(); it != A[i].end(); ++it) {
+        if ((*it).n_to == j) {
+            return *it;
+        }
+    }
+    print_and_exit("Error in getArc : Arc doesn't exist");
+    return Arc();
+}
 
 
 
@@ -185,14 +187,13 @@ void Graph::save_graph(std::string path){
     outFile<<N<<std::endl;
     outFile<<dim<<std::endl;
     for(int i = 0;i<N;++i) {
-        for(int j = 0;j<N;++j) {
-            if (A_bool[i][j] == 1) {
-                outFile<<i<<" "<<j;
-                for(int k = 0;k<A[i][j].weights.size();k++){
-                    outFile<<" "<<A[i][j].weights[k];
-                }
-                outFile<<std::endl;
+        
+        for(auto it = A[i].begin(); it !=A[i].end(); ++it) {
+            outFile<<i<<" "<<(*it).n_to;
+            for(int k = 0;k<(*it).weights.size();k++){
+                outFile<<" "<<(*it).weights[k];
             }
+            outFile<<std::endl;
         }
     }
 };

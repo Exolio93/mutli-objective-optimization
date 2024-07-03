@@ -184,14 +184,13 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
         total_l += q.size();
         end1 = Clock::now();
         start2 = Clock::now();
-        for (int succ = 0;succ<g.N; ++succ) {
-            if(g.A_bool[pivot][succ] == 1) {
-                counter2++;
-                start3 = Clock::now();
-                labels_update(labels,g.A[pivot][succ], q);
-                end3 = Clock::now();
-                durations[3] += end3-start3;
-            }
+        for (auto it = g.A[pivot].begin(); it != g.A[pivot].end();it++) {
+            counter2++;
+            start3 = Clock::now();
+            labels_update(labels,(*it), q);
+            end3 = Clock::now();
+            durations[3] += end3-start3;
+        
         }
         end2 = Clock::now();
         
@@ -280,11 +279,11 @@ std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) 
         total_l += q.size();
         end1 = Clock::now();
         start2 = Clock::now();
-        for (int succ = 0;succ<g.N; ++succ) {
-            if(g.A_bool[pivot.n][succ] == 1) {
-                labels_update_using_AUC(labels,g.A[pivot.n][succ], q, borders);
-            }
+        for (auto it = g.A[pivot.n].begin(); it != g.A[pivot.n].end();it++) {
+            labels_update_using_AUC(labels,(*it), q, borders);
+            
         }
+        
         end2 = Clock::now();
         end = Clock::now();
 
@@ -380,18 +379,16 @@ std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
         queues[1].erase(it_max2);
 
         //neighboors processing :
-        for (int j = 0;j<g.N;j++) {
-            if (g.A_bool[*it_max1][j]){
-                if (dists[0][j]>dists[0][*it_max1] +g.A[*it_max1][j].weights[0]){
-                    dists[0][j] = dists[0][*it_max1] +g.A[*it_max1][j].weights[0];
-                    preds[0][j] = *it_max1;
-                }
+        for (auto it = g.A[*it_max1].begin(); it != g.A[*it_max1].end();it++) {
+            if (dists[0][(*it).n_to]>dists[0][*it_max1] +(*it).weights[0]){
+                dists[0][(*it).n_to] = dists[0][*it_max1] +(*it).weights[0];
+                preds[0][(*it).n_to] = *it_max1;
             }
-            if (g.A_bool[*it_max2][j]){
-                if (dists[1][j]>dists[1][*it_max2] +g.A[*it_max2][j].weights[1]){
-                    dists[1][j] = dists[1][*it_max2] +g.A[*it_max2][j].weights[1];
-                    preds[1][j] = *it_max2;
-                }
+        }
+        for(auto it = g.A[*it_max2].begin(); it != g.A[*it_max2].end();it++) {
+            if (dists[1][(*it).n_to]>dists[1][*it_max2] +(*it).weights[1]){
+                dists[1][(*it).n_to] = dists[1][*it_max2] +(*it).weights[1];
+                preds[1][(*it).n_to] = *it_max2;
             }
         }
     }
@@ -403,7 +400,7 @@ std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
         count = 0;
         while(ind !=s) {
 
-            count += g.A[preds[0][ind]][ind].weights[1];
+            count += g.getArc(preds[0][ind],ind).weights[1];
             ind = preds[0][ind];
         }
         dists[2][i] = count;
@@ -411,7 +408,7 @@ std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
         ind = i;
         count = 0;
         while(ind!=s) {
-            count += g.A[preds[1][ind]][ind].weights[0];
+            count += g.getArc(preds[1][ind],ind).weights[0];
             ind = preds[1][ind];
         }
         dists[3][i] = count;

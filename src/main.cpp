@@ -12,12 +12,12 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =3;
+        int state =0;
 
 
         if (state == 0) {
-            Graph g = Graph::load_graph("../save/graph_to_plot/2_20_50");
-
+            Graph g = Graph::load_graph("../save/temp/small_graph");
+            
             std::vector<Label_set> labs = shortest_path_2D(g,0,false);
             print_path_from_solution(labs, 3);
 

@@ -16,16 +16,15 @@ void dijkstra(const Graph& graph, int source) {
 
         if (currentDist > dist[i]) continue;
 
-        for (int j = 0; j < graph.N; ++j) {
-            if (!graph.A_bool[i][j]) continue;
-
-            float weight = graph.A[i][j].weights[0];
+        for (auto it = graph.A[i].begin(); it != graph.A[i].end(); ++it) {
+    
+            float weight = (*it).weights[0];
             float distanceThroughI = dist[i] + weight;
 
-            if (distanceThroughI < dist[j]) {
-                dist[j] = distanceThroughI;
-                prev[j] = i;
-                pq.push({distanceThroughI, j});
+            if (distanceThroughI < dist[(*it).n_to]) {
+                dist[(*it).n_to] = distanceThroughI;
+                prev[(*it).n_to] = i;
+                pq.push({distanceThroughI, (*it).n_to});
             }
         }
     }
@@ -51,14 +50,13 @@ void bellmanFord(const Graph& graph, int source) {
     // Relax edges repeatedly
     for (int k = 0; k < graph.N - 1; ++k) {
         for (int i = 0; i < graph.N; ++i) {
-            for (int j = 0; j < graph.N; ++j) {
-                if (!graph.A_bool[i][j]) continue;
-
+            for (auto it = graph.A[i].begin(); it != graph.A[i].end(); ++it) {
+                
                 // Find the specific arc from i to j
-                float weight = graph.A[i][j].weights[0];
-                if (dist[i] + weight < dist[j]) {
-                    dist[j] = dist[i] + weight;
-                    prev[j] = i;
+                float weight = (*it).weights[0];
+                if (dist[i] + weight < dist[(*it).n_to]) {
+                    dist[(*it).n_to] = dist[i] + weight;
+                    prev[(*it).n_to] = i;
                 }
             }
         }
@@ -66,11 +64,10 @@ void bellmanFord(const Graph& graph, int source) {
 
     // Check for negative-weight cycles
     for (int i = 0; i < graph.N; ++i) {
-        for (int j = 0; j < graph.N; ++j) {
-            if (!graph.A_bool[i][j]) continue;
-
-            float weight = graph.A[i][j].weights[0];
-            if (dist[i] + weight < dist[j]) {
+        for (auto it = graph.A[i].begin(); it != graph.A[i].end(); ++it) {
+           
+            float weight = (*it).weights[0];
+            if (dist[i] + weight < dist[(*it).n_to]) {
                 std::cerr << "Graph contains a negative-weight cycle" << std::endl;
                 return;
             }

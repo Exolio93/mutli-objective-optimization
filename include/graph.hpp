@@ -33,24 +33,15 @@ class Graph {
 public :
     int dim;
     int N;
-    std::vector<std::vector<Arc>> A;
-    std::vector<std::vector<bool>> A_bool;
+    std::vector<std::list<Arc>> A;
 
-
-    Graph(int dim_size, int N_size) {
-        dim = dim_size;
-        N = N_size;
-        A.resize(N);
-        A_bool.resize(N);
-        for (int i = 0; i < N; ++i) {
-            A_bool[i] = std::vector<bool>(N, 0);
-            A[i] = std::vector<Arc>(N, Arc());
-        
-        }
-    };
+    Graph(int dim_size, int N_size) 
+        : dim(dim_size), N(N_size), A(N_size) {
+        // Vous pouvez ajouter d'autres initialisations ici si nécessaire
+    }
 
     void addArc(int i, int j, std::vector<float> ws);
-
+    Arc getArc(int i, int j);
     //rho : arc rate
     //val_max : max value for each component of arcs
 
