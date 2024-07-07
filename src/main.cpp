@@ -12,7 +12,7 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =0;
+        int state =2;
 
 
         if (state == 0) {
@@ -61,21 +61,22 @@ int main(int argc, char* argv[]){
 
         }
         if (state == 2) {
-            Graph g = Graph::load_graph("../save/graph_to_plot/2_20_50");
+            BinaryTree bt;
 
-            auto lab1 = shortest_path_2D(g, 0, false);
-            auto lab2 = shortest_path_2D_using_AUC(g,0,false);
+            // Créer la racine
+            bt.root = std::make_shared<TreeNode>(1, 2);
 
+            // Ajouter des noeuds internes et des feuilles
+            bt.addInternalNode(3, 4, bt.root, true);
+            bt.addInternalNode(5, 6, bt.root, false);
+            bt.addLeaf(Label(1, 8, 0, nullptr), bt.root->left, true);
+            bt.addLeaf(Label(2, 7, 0, nullptr), bt.root->left, false);
+            bt.addLeaf(Label(3, 6, 0, nullptr), bt.root->right, true);
 
-            for(auto it = lab1.begin(); it !=lab1.end(); ++it) {
-                std::cout<<(*it).set.size()<<std::endl;
-            }
+            // Traverser et afficher
+            std::cout << "Inorder Traversal: " << std::endl;
+            bt.inorderTraversal(bt.root);
             
-            std::cout<<"\n\nFIFO : "<<std::endl;
-            print_path_from_solution(lab1,19);
-
-            std::cout<<"\n\nHyper volume"<<std::endl;
-            print_path_from_solution(lab2,19);
 
         }
 
