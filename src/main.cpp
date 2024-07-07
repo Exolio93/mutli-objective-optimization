@@ -76,7 +76,6 @@ int main(int argc, char* argv[]){
             // Traverser et afficher
             std::cout << "Inorder Traversal: " << std::endl;
             bt.inorderTraversal(bt.root);
-            
 
         }
 
