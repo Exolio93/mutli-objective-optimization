@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import random as r
+import time as t
 class Label:
     def __init__(self, x, y):
         self.x = x
@@ -125,34 +126,50 @@ def create_balanced_tree(l):
 
 
 def main():
-    n = 7
-    l = []
-    for k in range(n):
-        l.append(Label(k,n-1-k))
+    n_val = [1000,2000,4000,8000,12000,16000]
+    time_val = []
+    
+    for n in n_val :
+        print(n)
+        l = []
+        for k in range(n):
+            l.append(Label(k,n-1-k))
+            
+        bt2 = create_balanced_tree(l)
+        t1 = t.time()
+    
+        for k in range(0,1001):
+            # rdm = r.uniform(-1,1)
+            x = (n-1)*k/1000
+            y=n-1-x
+            bt2.cut_branch(x,y)
+            # if bt2.test_insertion(x,y):
+            #     plt.scatter([x], [y], c="gray", marker = 'o')
+            # else : 
+            #     plt.scatter([x], [y], c="gray", marker = 'x')
+        t2 = t.time()
+        delta = t2-t1
+        print(delta)
+        time_val.append(delta)
+    
         
-    bt2 = create_balanced_tree(l)
-    
-    
-    
-    
-    
-    # for k in range(0,101):
-    #     rdm = r.uniform(-1,1)
-    #     x = (n-1)*k/100
-    #     y=n-1-x+rdm
-    #     if bt2.test_insertion(x,y):
-    #         plt.scatter([x], [y], c="gray", marker = 'o')
-    #     else : 
-    #         plt.scatter([x], [y], c="gray", marker = 'x')
-    
-    
-    
-    x,y = 1.8,1.8
-    bt2.plot()
-    bt2.cut_branch(x,y)
-    plt.scatter([x], [y], c="gray", marker = 'x')
-    plt.figure()
-    bt2.plot()
+    # print(time_val)
+    plt.plot(n_val,time_val)
+
+    # n = 10
+    # l = []
+    # for k in range(n):
+    #     l.append(Label(k,n-1-k))
+        
+    # bt2 = create_balanced_tree(l)  
+
+    # x,y = 3.5,4.5
+    # bt2.plot()
+    # bt2.cut_branch(x,y)
+    # plt.scatter([x], [y], c="gray", marker = 'x')
+    # plt.figure()
+    # plt.scatter([x], [y], c="gray", marker = 'x')
+    # bt2.plot()
     
     plt.show()
 
