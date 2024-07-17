@@ -5,8 +5,7 @@ class Label:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-
-
+        self.isIns = False;
 #TreeNode(xt,yt,xb,yb)
 #TreeNode(lab)
 class TreeNode: 
@@ -20,10 +19,10 @@ class TreeNode:
             self.xb = xb
             self.yb = yb
         else:
-            self.xt = None
-            self.yt = None
-            self.xb = None
-            self.yb = None
+            self.xt = lab.x
+            self.yt = lab.y
+            self.xb = lab.x
+            self.yb = lab.y
         
         self.root = None
         
@@ -85,27 +84,90 @@ class TreeNode:
         return self.left.test_insertion(x,y) and self.right.test_insertion(x,y)
                 
     def cut_branch(self,x, y):
+        #
         if self.label:
             if self.label.x>= x and self.label.y >= y:
-                plt.scatter([self.label.x],[self.label.y], c='red', marker = "x")
+                # plt.scatter([self.label.x],[self.label.y], c='red', marker = "x")
                 return True
             return False
-        if (x>=self.xb and y>= self.yt) or (x>=self.xt and y>= self.yb):
+        if (y>= self.yt) or (x>=self.xt):
             return False
         if (x<=self.xb and y<= self.yb):
             self.left = None
             self.right = None
-            plt.scatter([self.xt],[self.yt], c='red', marker = "x")
-            plt.scatter([self.xb],[self.yb], c='red', marker = "x")
+            # plt.scatter([self.xt],[self.yt], c='red', marker = "x")
+            # plt.scatter([self.xb],[self.yb], c='red', marker = "x")
             return True
         
         
         if self.left.cut_branch(x,y) :
-            self.left = False
+            self.left = None
         if self.right.cut_branch(x,y) :
-            self.right = False
+            self.right = None
             
         return False
+    
+
+    def remove_and_try_insertion(self,lab):
+        #
+        if self.label:
+            if self.label.x>= lab.x and self.label.y >= lab.y:
+                if lab.isIns :
+                    return None
+                else : 
+                    lab.isIns = True
+                    self.label = lab
+                    self.xt = lab.x
+                    self.yt = lab.y
+                    self.xb = lab.x
+                    self.yb = lab.y
+                    return self
+        if (lab.y>= self.yt) or (lab.x>=self.xt):
+            return self
+        if (lab.x<=self.xb and lab.y<= self.yb):
+            self.left = None
+            self.right = None
+            if lab.isIns :
+                return None
+            else : 
+                lab.isIns = True
+                self.label = lab
+                self.xt = lab.x
+                self.yt = lab.y
+                self.xb = lab.x
+                self.yb = lab.y
+                return self
+        
+        left_child = self.left.remove_and_try_insertion(lab)
+        right_child = self.right.remove_and_try_insertion(lab)
+        self.left = left_child
+        self.right = right_child
+        if right_child == None and left_child == None : 
+            return None
+        
+        elif right_child == None :
+             
+            return left_child
+        
+        elif left_child == None : 
+            return right_child
+        
+        else : 
+            self.xb = left_child.xb
+            self.yb = right_child.yb
+            self.xt = right_child.xt
+            self.yt = left_child.yt
+            return self
+        
+    def insert(self,lab):
+        print("ok") 
+        
+    def remove_and_insert(self,lab):
+        self.remove_and_try_insertion(lab)
+        
+        if not lab.isIns :
+            self.insert(lab)
+        
         
     
     
@@ -126,50 +188,55 @@ def create_balanced_tree(l):
 
 
 def main():
-    n_val = [1000,2000,4000,8000,12000,16000]
-    time_val = []
+    # n_val = [1000,2000,4000,8000,12000,16000,24000,32000]
+    # time_val = []
     
-    for n in n_val :
-        print(n)
-        l = []
-        for k in range(n):
-            l.append(Label(k,n-1-k))
+    # for n in n_val :
+    #     print(n)
+    #     l = []
+        
+    #     for k in range(n):
+    #         l.append(Label(k,n-1-k))
             
-        bt2 = create_balanced_tree(l)
-        t1 = t.time()
+    #     bt2 = create_balanced_tree(l)
+    #     # bt2.plot()
+    #     t1 = t.time()
     
-        for k in range(0,1001):
-            # rdm = r.uniform(-1,1)
-            x = (n-1)*k/1000
-            y=n-1-x
-            bt2.cut_branch(x,y)
-            # if bt2.test_insertion(x,y):
-            #     plt.scatter([x], [y], c="gray", marker = 'o')
-            # else : 
-            #     plt.scatter([x], [y], c="gray", marker = 'x')
-        t2 = t.time()
-        delta = t2-t1
-        print(delta)
-        time_val.append(delta)
+    #     for k in range(0,100001):
+    #         # rdm = r.uniform(-1,1)
+    #         x = (n-1)*k/100000
+    #         y=n-1-x
+    #         bt2.cut_branch(x,y)
+    #         # if bt2.test_insertion(x,y):
+    #         #     plt.scatter([x], [y], c="gray", marker = 'o')
+    #         # else : 
+    #         #     plt.scatter([x], [y], c="gray", marker = 'x')
+    #     t2 = t.time()
+    #     delta = t2-t1
+    #     print(delta)
+    #     time_val.append(delta)
     
         
-    # print(time_val)
-    plt.plot(n_val,time_val)
+    # # print(time_val)
+    # plt.plot(n_val,time_val)
 
-    # n = 10
-    # l = []
-    # for k in range(n):
-    #     l.append(Label(k,n-1-k))
-        
-    # bt2 = create_balanced_tree(l)  
+    #####################""
 
-    # x,y = 3.5,4.5
-    # bt2.plot()
-    # bt2.cut_branch(x,y)
-    # plt.scatter([x], [y], c="gray", marker = 'x')
-    # plt.figure()
-    # plt.scatter([x], [y], c="gray", marker = 'x')
-    # bt2.plot()
+    n = 10
+    l = []
+    for k in range(n):
+        l.append(Label(k,n-1-k))
+
+    bt2 = create_balanced_tree(l)  
+
+    x,y = 4.5, 4.5
+    bt2.plot()
+    
+    bt2.remove_and_insert(Label(x,y))
+    plt.scatter([x], [y], c="gray", marker = 'x')
+    plt.figure()
+    plt.scatter([x], [y], c="gray", marker = 'x')
+    bt2.plot()
     
     plt.show()
 
