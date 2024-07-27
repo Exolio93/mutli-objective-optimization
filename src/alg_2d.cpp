@@ -242,6 +242,30 @@ std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) 
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
     }
+    
+    
+
+
+    float counter = 0;
+    float total_l =1;
+    
+    auto start = Clock::now();
+    auto end = Clock::now();
+    auto start1 = Clock::now();
+    auto end1 = Clock::now();
+    auto start2 = Clock::now();
+    auto end2 = Clock::now();
+    auto start3 = Clock::now();
+    auto end3 = Clock::now();
+
+    float counter2 = 0;
+    int av_size = 0;
+
+    auto durations = std::vector<Duration>(5,Duration(0));
+
+    start = Clock::now();
+
+
     //Labels
     std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
     labels[s].add_point(0,0,s, nullptr);
@@ -252,51 +276,49 @@ std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) 
     Heap q = Heap(g.N);
     q.push(Heap_elt(s, labels[s], borders));
 
-    
-
-
-    float counter = 0;
-    float total_l =1;
-    auto start = Clock::now();
-    auto end = Clock::now();
-    auto start1 = Clock::now();
-    auto end1 = Clock::now();
-    auto start2 = Clock::now();
-    auto end2 = Clock::now();
-
-    auto durations = std::vector<Duration>(3,Duration(0));
-
-
+    end = Clock::now();
+    durations[4] = end - start;
     while(q.size() >0) {
         counter++;
-        start = Clock::now();
+
         start1 = Clock::now();
 
         Heap_elt pivot = q.top();
         q.pop();
 
-
         total_l += q.size();
         end1 = Clock::now();
         start2 = Clock::now();
         for (auto it = g.A[pivot.n].begin(); it != g.A[pivot.n].end();it++) {
+            counter2++;
+            start3 = Clock::now();
             labels_update_using_AUC(labels,(*it), q, borders);
-            
+            end3 = Clock::now();
+            durations[3] += end3-start3;
         }
         
         end2 = Clock::now();
         end = Clock::now();
 
-        durations[0] += end - start;
         durations[1] += end1 - start1;
         durations[2] += end2 - start2;
 
     }
+    end = Clock::now();
+    durations[0] = end - start;
+
+
     std::cout
-    <<"In while loop : \nqueue : "<<durations[1].count()/durations[0].count()
-    << "\nupdate : "<<durations[2].count()/durations[0].count()
-    <<"\naverage total : "<<total_l/counter
-    <<"counter : "<<counter
+    
+    <<"\nTotal time: "<<durations[0].count()
+    <<"\nFirst DIjkstra : "<<durations[4].count()
+    <<"\n\% for queue : "<<durations[1].count()/durations[0].count()
+    << "\n\% for travel neighbors : "<<(durations[2].count()-durations[3].count())/durations[0].count()
+    << "\n\% for update a labels : "<<durations[3].count()/durations[0].count()
+    <<"\naverage size of queue : "<<total_l/counter
+    <<"\niteration of while loop : "<<counter
+    <<"\nAv size label_set :"<<av_size/(counter2*2)
+    
     <<std::endl;
 
     return labels;

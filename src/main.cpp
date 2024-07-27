@@ -12,7 +12,7 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =2;
+        int state =1;
 
 
         if (state == 0) {
@@ -25,37 +25,48 @@ int main(int argc, char* argv[]){
 
         }
         if (state == 1) {
-            std::string d200_10 = "../save/dataset_2/2_200_10";
-            std::string d200_30 = "../save/temp/2_200_30";
-            std::string d200_50 = "../save/temp/2_200_50";
-            std::string d200_70 = "../save/temp/2_200_70";
-            std::string d500 = "../save/dataset_2/2_500_10";
-            std::string d1000 = "../save/dataset_2/2_1000_10";
-            std::string d2000 = "../save/dataset_2/2_2000_10";
+
+            std::string d500 = "../save/temp/2_500_10";
+            std::string d1000 = "../save/temp/2_1000_10";
+            std::string d1500 = "../save/temp/2_1500_10";
+            std::string d2500 = "../save/temp/2_2500_10";
+            std::string d3500 = "../save/temp/2_3500_10";
+            std::string d2000 = "../save/temp/2_2000_10";
+            std::string d3000 = "../save/temp/2_3000_10";
             std::string d4000 = "../save/temp/2_4000_10";
 
-            Graph g1 = Graph::load_graph(d200_10);
-            Graph g2 = Graph::load_graph(d500);
-            Graph g3 = Graph::load_graph(d1000);
 
+            Graph g1 = Graph::load_graph(d500);
+            Graph g2 = Graph::load_graph(d1000);
+            Graph g3 = Graph::load_graph(d1500);
+            Graph g4 = Graph::load_graph(d2000);
+            Graph g5 = Graph::load_graph(d2500);
+            Graph g6 = Graph::load_graph(d3000);
+            Graph g7 = Graph::load_graph(d3500);
+            Graph g8 = Graph::load_graph(d4000);
 
-            auto start = Clock::now();
+            
             shortest_path_2D(g1,0,false);
-            auto end = Clock::now();
-            Duration d = end - start;
-            std::cout<< "Total time : " << d.count()<<std::endl;
-
-            start = Clock::now();
             shortest_path_2D(g2,0,false);
-            end = Clock::now();
-            d = end - start;
-            std::cout<< "Total time : " << d.count()<<std::endl;
-
-            start = Clock::now();
             shortest_path_2D(g3,0,false);
-            end = Clock::now();
-            d = end - start;
-            std::cout<< "Total time : " << d.count()<<std::endl;
+            shortest_path_2D(g4,0,false);
+            shortest_path_2D(g5,0,false);
+            shortest_path_2D(g6,0,false);
+            shortest_path_2D(g7,0,false);
+            shortest_path_2D(g8,0,false);
+
+            std::cout<<"-aaas---"<<std::endl;
+
+            shortest_path_2D_using_AUC(g1,0,false);
+            std::cout<<"ok"<<std::endl;
+            shortest_path_2D_using_AUC(g2,0,false);
+            shortest_path_2D_using_AUC(g3,0,false);
+            shortest_path_2D_using_AUC(g4,0,false);
+            shortest_path_2D_using_AUC(g5,0,false);
+            shortest_path_2D_using_AUC(g6,0,false);
+            shortest_path_2D_using_AUC(g7,0,false);
+            shortest_path_2D_using_AUC(g8,0,false);
+
 
             return 0;
 
@@ -80,9 +91,11 @@ int main(int argc, char* argv[]){
         }
 
         if (state == 3) {
-            Graph::generate_graph_on_grid(1000, 2, 0.7, 100).save_graph("../save/dataset_2/2_1000_70");
-            Graph::generate_graph_on_grid(2000, 2, 0.7, 100).save_graph("../save/dataset_2/2_2000_70");
-            Graph::generate_graph_on_grid(2000, 2, 0.5, 100).save_graph("../save/dataset_2/2_2000_50");
+            Graph::generate_graph_on_grid(1500, 2, 0.1, 100).save_graph("../save/temp/2_1500_10");
+            Graph::generate_graph_on_grid(2500, 2, 0.1, 100).save_graph("../save/temp/2_2500_10");
+            Graph::generate_graph_on_grid(3500, 2, 0.1, 100).save_graph("../save/temp/2_3500_10");
+           
+        
         }
     }
 

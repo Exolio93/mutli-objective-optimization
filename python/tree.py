@@ -72,48 +72,18 @@ class TreeNode:
             plt.plot([self.xb,xb ],[self.yb, yb], color='green', linestyle='--')
         
         return self.xt, self.yt, self.xb, self.yb
-            
-    def test_insertion(self,x,y):
-        if self.label:
-            return True
-        if (x>=self.xb and y>= self.yt) or (x>=self.xt and y>= self.yb):
-            return False
-        if x<=self.xb or y<=self.yb :
-            return True
-        
-        return self.left.test_insertion(x,y) and self.right.test_insertion(x,y)
-                
-    def cut_branch(self,x, y):
-        #
-        if self.label:
-            if self.label.x>= x and self.label.y >= y:
-                # plt.scatter([self.label.x],[self.label.y], c='red', marker = "x")
-                return True
-            return False
-        if (y>= self.yt) or (x>=self.xt):
-            return False
-        if (x<=self.xb and y<= self.yb):
-            self.left = None
-            self.right = None
-            # plt.scatter([self.xt],[self.yt], c='red', marker = "x")
-            # plt.scatter([self.xb],[self.yb], c='red', marker = "x")
-            return True
-        
-        
-        if self.left.cut_branch(x,y) :
-            self.left = None
-        if self.right.cut_branch(x,y) :
-            self.right = None
-            
-        return False
-    
 
-    def remove_and_try_insertion(self,lab):
-        #
+    def remove_and_insert(self,lab):
+        insert_without_cutting = False
+        if ((lab.x > self.xt and lab.y <self.yb) or (lab.x<self.xb and lab.y>self.yt)):
+            insert_without_cutting = True
+            
+            
         if self.label:
             if self.label.x>= lab.x and self.label.y >= lab.y:
                 if lab.isIns :
-                    return None
+                    return None, False
+                
                 else : 
                     lab.isIns = True
                     self.label = lab
@@ -121,14 +91,16 @@ class TreeNode:
                     self.yt = lab.y
                     self.xb = lab.x
                     self.yb = lab.y
-                    return self
-        if (lab.y>= self.yt) or (lab.x>=self.xt):
-            return self
+                    return self,False
+            else : 
+                return self, insert_without_cutting
+        if (lab.y> self.yt) or (lab.x>self.xt):
+            return self,insert_without_cutting
         if (lab.x<=self.xb and lab.y<= self.yb):
             self.left = None
             self.right = None
             if lab.isIns :
-                return None
+                return None,False
             else : 
                 lab.isIns = True
                 self.label = lab
@@ -136,40 +108,113 @@ class TreeNode:
                 self.yt = lab.y
                 self.xb = lab.x
                 self.yb = lab.y
-                return self
+                return self,False
         
-        left_child = self.left.remove_and_try_insertion(lab)
-        right_child = self.right.remove_and_try_insertion(lab)
+        left_child,left_bool = self.left.remove_and_insert(lab)
+        right_child,right_bool = self.right.remove_and_insert(lab)
+        
         self.left = left_child
         self.right = right_child
+        
+        
+        if( left_bool and right_bool and not lab.isIns):
+            lab.isIns = True
+            if r.uniform(0,1)>0.5:
+                node = TreeNode(self.xt, lab.y, lab.x, self.yb)
+                node.add_leaf(lab,True)
+                node.right = right_child
+                self.right = node
+            else:
+                node = TreeNode(lab.x, self.yt, self.xb, lab.y)
+                node.add_leaf(lab,False)
+                node.left = left_child
+                self.left = node
+                
+                
+            
+            
+        
+        
+        
+        
         if right_child == None and left_child == None : 
-            return None
+            return None,False
         
         elif right_child == None :
              
-            return left_child
+            return left_child,False
         
         elif left_child == None : 
-            return right_child
+            return right_child,False
         
         else : 
             self.xb = left_child.xb
             self.yb = right_child.yb
             self.xt = right_child.xt
             self.yt = left_child.yt
+            return self,insert_without_cutting
+        
+    def merge_fronts(self, tree_i):
+        #case 4
+        if tree_i.label:
+            self.remove_and_insert(tree_i.label)
             return self
         
-    def insert(self,lab):
-        print("ok") 
-        
-    def remove_and_insert(self,lab):
-        self.remove_and_try_insertion(lab)
-        
-        if not lab.isIns :
-            self.insert(lab)
+        if self.label:
+            tree_i.remove_and_insert(self.label)
+            return tree_i
         
         
-    
+        #case 1
+        if (tree_i.xb>=self.xb and tree_i.yb>=self.yt) or (tree_i.xb>=self.xt and tree_i.yb>=self.yb):
+            return self
+        
+        
+        #case2
+        if (tree_i.xt<=self.xb and tree_i.yt<=self.yt) or (tree_i.xt<=self.xt and tree_i.yt<=self.yb):
+            return tree_i
+        
+        
+        #case 3.A
+        if (tree_i.xt<self.xb and tree_i.yb>self.yt):
+            node = TreeNode(self.xt, tree_i.yt, tree_i.xb, self.yb)
+            node.left = tree_i
+            node.right = self
+            return node
+        
+        
+        #case 3.B
+        if (tree_i.xb>self.xt and tree_i.yt<self.yb):
+            node = TreeNode(tree_i.xt, self.yt, self.xb, tree_i.yb)
+            node.left = self
+            node.right = tree_i
+            return node
+        
+        #case 4
+        if (tree_i.xb>=self.xb and tree_i.xt<=self.xt and tree_i.yb>= self.yb and tree_i.yt<=self.yt):
+            r = self.right
+            l = self.left
+            
+            if(tree_i.xt<l.xb or tree_i.yb>l.yt):
+                self.right.merge_fronts(tree_i)
+                return self
+            
+            if(tree_i.xb>r.xt or tree_i.yt<r.yb):
+                self.left.merge_fronts(tree_i)
+                return self
+            
+            if(tree_i.xt<r.xt or tree_i.yb>r.yb):
+                #TODO : case 5.A
+                print("todo")
+                
+            if(tree_i.xb>l.xb or tree_i.yt<l.yt):
+                #TODO : case 5.B
+                print("todo")
+        
+            
+        
+        
+        
     
 def create_balanced_tree(l):
     if len(l) == 0 : 
@@ -187,8 +232,9 @@ def create_balanced_tree(l):
     
 
 
+
 def main():
-    # n_val = [1000,2000,4000,8000,12000,16000,24000,32000]
+    # n_val = [1000,4000,12000,16000,32000,64000,128000,256000]
     # time_val = []
     
     # for n in n_val :
@@ -202,11 +248,12 @@ def main():
     #     # bt2.plot()
     #     t1 = t.time()
     
-    #     for k in range(0,100001):
+    #     for k in range(0,50001):
     #         # rdm = r.uniform(-1,1)
-    #         x = (n-1)*k/100000
-    #         y=n-1-x
-    #         bt2.cut_branch(x,y)
+    #         x = r.uniform(0,(n-1))
+    #         y=n-1-x + r.uniform(-2,2)
+    #         bt2.remove_and_try_insertion(Label(x,y))
+            
     #         # if bt2.test_insertion(x,y):
     #         #     plt.scatter([x], [y], c="gray", marker = 'o')
     #         # else : 
@@ -219,8 +266,8 @@ def main():
         
     # # print(time_val)
     # plt.plot(n_val,time_val)
-
-    #####################""
+    # plt.show()
+    #####################
 
     n = 10
     l = []
@@ -229,10 +276,10 @@ def main():
 
     bt2 = create_balanced_tree(l)  
 
-    x,y = 4.5, 4.5
+    x,y = 1,3.5
     bt2.plot()
     
-    bt2.remove_and_insert(Label(x,y))
+    bt2.remove_and_try_insertion(Label(x,y))
     plt.scatter([x], [y], c="gray", marker = 'x')
     plt.figure()
     plt.scatter([x], [y], c="gray", marker = 'x')
