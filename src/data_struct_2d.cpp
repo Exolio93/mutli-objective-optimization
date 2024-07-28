@@ -222,33 +222,194 @@ int Queue::size(){
     return queue_list.size();
 }
 
+void TreeNode::print() const {
+    
+    if (isLeaf()) {
 
-void BinaryTree::addInternalNode(int x, int y, std::shared_ptr<TreeNode> parent, bool isLeft) {
-    auto node = std::make_shared<TreeNode>(x, y);
-    if (isLeft) {
-        parent->left = node;
+        std::cout << "--> (" << label->getX() << ", " << label->getY() << ")\n";
+        return;
+    } 
+
+    std::cout << "[(" << xb << ", " << yb << ") to (" << xt << ", " << yt << ")]\n";
+
+    if (left) {
+
+        left->print();
+
+    }
+    if (right) {
+
+        right->print();
+
+    }
+
+}
+
+std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
+    bool insert_without_cutting = false;
+    if ((lab->getX() > xt && lab->getY() < yb) || (lab->getX() < xb && lab->getY() > yt)) {
+        insert_without_cutting = true;
+    }
+
+    if (label) {
+        if (label->getX() >= lab->getX() && label->getY() >= lab->getY()) {
+            if (lab->is_inserted) {
+                return std::make_pair(nullptr, false);
+            } else {
+                lab->is_inserted = true;
+                label = lab;
+                xt = lab->getX();
+                yt = lab->getY();
+                xb = lab->getX();
+                yb = lab->getY();
+                return std::make_pair(this, false);
+            }
+        } else {
+            return std::make_pair(this, insert_without_cutting);
+        }
+    }
+
+    if (lab->getY() > yt || lab->getX() > xt) {
+        return std::make_pair(this, insert_without_cutting);
+    }
+
+    if (lab->getX() <= xb && lab->getY() <= yb) {
+        left = nullptr;
+        right = nullptr;
+        if (lab->is_inserted) {
+            return std::make_pair(nullptr, false);
+        } else {
+            lab->is_inserted = true;
+            label = lab;
+            xt = lab->getX();
+            yt = lab->getY();
+            xb = lab->getX();
+            yb = lab->getY();
+            return std::make_pair(this, false);
+        }
+    }
+
+    std::pair<TreeNode*, bool> left_couple =left->insert_label(lab);
+    std::pair<TreeNode*, bool> right_couple =right->insert_label(lab);
+
+    left = left_couple.first;
+    right = right_couple.first;
+
+    if (left_couple.second && right_couple.second && !lab->is_inserted) {
+
+        lab->is_inserted = true;
+
+        if (std::rand() / double(RAND_MAX) > 0.5) {
+            TreeNode* node = new TreeNode(xt, lab->getY(), lab->getX(), yb);
+            node->left = new TreeNode(lab);
+            node->right = right;
+            right = node;
+            node->print();
+        } else {
+            TreeNode* node = new TreeNode(lab->getX(), yt, xb, lab->getY());
+            node->right = new TreeNode(lab);
+            node->left = left;
+            left = node;
+        }
+    }
+
+    if (!right && !left) {
+        return std::make_pair(nullptr, false);
+    } else if (!right) {
+        return std::make_pair(left, false);
+    } else if (!left) {
+        return std::make_pair(right, false);
     } else {
-        parent->right = node;
+        xb = left->xb;
+        yb = right->yb;
+        xt = right->xt;
+        yt = left->yt;
+        return std::make_pair(this, insert_without_cutting);
     }
 }
 
-void BinaryTree::addLeaf(const Label& lbl, std::shared_ptr<TreeNode> parent, bool isLeft) {
-    auto leaf = std::make_shared<TreeNode>(lbl);
-    if (isLeft) {
-        parent->left = leaf;
-    } else {
-        parent->right = leaf;
-    }
-}
+/*
 
-// Parcours en ordre pour afficher les valeurs
-void BinaryTree::inorderTraversal(std::shared_ptr<TreeNode> node) {
-    if (!node) return;
-    inorderTraversal(node->left);
-    if (node->label) {
-        std::cout << "Label: " << node->label->getX() << ", " << node->label->getY() << std::endl;
-    } else {
-        std::cout << "Internal Node: (" << node->coords.first << ", " << node->coords.second << ")" << std::endl;
+std::pair<std::shared_ptr<TreeNode>, bool> TreeNode::insert_label(Label& lab) {
+    std::cout<<"OK"<<std::endl;
+    bool insert_without_cutting = false;
+    if ((lab.getX() > this->xt && lab.getY() < this->yb) || (lab.getX() < this->xb && lab.getY() > this->yt)) {
+        insert_without_cutting = true;
     }
-    inorderTraversal(node->right);
+
+    if (this->label) {
+        if (this->label->getX() >= lab.getX() && this->label->getY() >= lab.getY()) {
+            if (lab.is_inserted) {
+                return std::make_pair(nullptr, false);
+            } else {
+                lab.is_inserted = true;
+                this->label = std::make_unique<Label>(lab);
+                this->xt = lab.getX();
+                this->yt = lab.getY();
+                this->xb = lab.getX();
+                this->yb = lab.getY();
+                return std::make_pair(std::make_shared<TreeNode>(std::move(*this)), false);
+            }
+        } else {
+            return std::make_pair(std::make_shared<TreeNode>(std::move(*this)), insert_without_cutting);
+        }
+    }
+
+    if (lab.getY() > this->yt || lab.getX() > this->xt) {
+        return std::make_pair(std::make_shared<TreeNode>(std::move(*this)), insert_without_cutting);
+    }
+
+    if (lab.getX() <= this->xb && lab.getY() <= this->yb) {
+        this->left = nullptr;
+        this->right = nullptr;
+        if (lab.is_inserted) {
+            return std::make_pair(nullptr, false);
+        } else {
+            lab.is_inserted = true;
+            this->label = std::make_unique<Label>(lab);
+            this->xt = lab.getX();
+            this->yt = lab.getY();
+            this->xb = lab.getX();
+            this->yb = lab.getY();
+            return std::make_pair(std::make_shared<TreeNode>(std::move(*this)), false);
+        }
+    }
+
+    std::shared_ptr<TreeNode> left_child = this->left ? this->left : std::make_shared<TreeNode>(0, 0, 0, 0);
+    std::shared_ptr<TreeNode> right_child = this->right ? this->right : std::make_shared<TreeNode>(0, 0, 0, 0);
+    bool left_bool = this->left ? this->left->insert_label(lab).second : false;
+    bool right_bool = this->right ? this->right->insert_label(lab).second : false;
+
+    this->left = std::move(left_child);
+    this->right = std::move(right_child);
+
+    if (left_bool && right_bool && !lab.is_inserted) {
+        lab.is_inserted = true;
+        if (std::rand() / double(RAND_MAX) > 0.5) {
+            auto node = std::make_shared<TreeNode>(this->xt, lab.getY(), lab.getX(), this->yb);
+            node->label = std::make_unique<Label>(lab);
+            node->right = std::move(this->right);
+            this->right = std::move(node);
+        } else {
+            auto node = std::make_shared<TreeNode>(lab.getX(), this->yt, this->xb, lab.getY());
+            node->label = std::make_unique<Label>(lab);
+            node->left = std::move(this->left);
+            this->left = std::move(node);
+        }
+    }
+
+    if (!this->right && !this->left) {
+        return std::make_pair(nullptr, false);
+    } else if (!this->right) {
+        return std::make_pair(this->left, false);
+    } else if (!this->left) {
+        return std::make_pair(this->right, false);
+    } else {
+        this->xb = this->left->xb;
+        this->yb = this->right->yb;
+        this->xt = this->right->xt;
+        this->yt = this->left->yt;
+        return std::make_pair(std::make_shared<TreeNode>(std::move(*this)), insert_without_cutting);
+    }
 }
+*/

@@ -12,7 +12,7 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =1;
+        int state =2;
 
 
         if (state == 0) {
@@ -55,10 +55,9 @@ int main(int argc, char* argv[]){
             shortest_path_2D(g7,0,false);
             shortest_path_2D(g8,0,false);
 
-            std::cout<<"-aaas---"<<std::endl;
+            std::cout<<"-----------"<<std::endl;
 
             shortest_path_2D_using_AUC(g1,0,false);
-            std::cout<<"ok"<<std::endl;
             shortest_path_2D_using_AUC(g2,0,false);
             shortest_path_2D_using_AUC(g3,0,false);
             shortest_path_2D_using_AUC(g4,0,false);
@@ -72,21 +71,29 @@ int main(int argc, char* argv[]){
 
         }
         if (state == 2) {
-            BinaryTree bt;
+            TreeNode* root = new TreeNode(2, 1, 6, 5);
 
-            // Créer la racine
-            bt.root = std::make_shared<TreeNode>(1, 2);
+            // Création des nœuds enfants
+            root->left = new TreeNode(2, 3, 3, 5);
+            root->right = new TreeNode(4, 1, 6, 2);
 
-            // Ajouter des noeuds internes et des feuilles
-            bt.addInternalNode(3, 4, bt.root, true);
-            bt.addInternalNode(5, 6, bt.root, false);
-            bt.addLeaf(Label(1, 8, 0, nullptr), bt.root->left, true);
-            bt.addLeaf(Label(2, 7, 0, nullptr), bt.root->left, false);
-            bt.addLeaf(Label(3, 6, 0, nullptr), bt.root->right, true);
+            // Création des feuilles avec des labels
+            root->left->left = new TreeNode(new Label(2, 5, 0, nullptr));
+            root->left->right = new TreeNode(new Label(3, 3, 0, nullptr));
+            root->right->left = new TreeNode(new Label(4, 2, 0, nullptr));
+            root->right->right = new TreeNode(new Label(6, 1, 0, nullptr));
 
-            // Traverser et afficher
-            std::cout << "Inorder Traversal: " << std::endl;
-            bt.inorderTraversal(bt.root);
+            root->print();
+            Label l = Label(2.5,4,0,nullptr);
+            root->insert_label(&l);  
+            std::cout<<"--------"<<std::endl;
+
+            // auto new_node = std::make_shared<TreeNode>(Label(-1,-1,0,nullptr));
+            // root->right = new_node;
+            root->print();
+
+    
+
 
         }
 
@@ -95,6 +102,7 @@ int main(int argc, char* argv[]){
             Graph::generate_graph_on_grid(2500, 2, 0.1, 100).save_graph("../save/temp/2_2500_10");
             Graph::generate_graph_on_grid(3500, 2, 0.1, 100).save_graph("../save/temp/2_3500_10");
            
+
         
         }
     }

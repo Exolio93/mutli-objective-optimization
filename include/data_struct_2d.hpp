@@ -9,6 +9,8 @@
 #include<vector>
 #include <variant>
 #include <memory>
+#include <utility>
+#include <cstdlib>
 
 class Label {
 public :
@@ -16,6 +18,7 @@ public :
     float y;
     int pred;
     Label* label_pred;
+    bool is_inserted = false;
     
     float getX() const;
     float getY() const;
@@ -81,35 +84,39 @@ public :
 
 
 
-struct TreeNode {
-    std::pair<int, int> coords;
-    std::unique_ptr<Label> label;  // Pointeur unique vers Label si le noeud est une feuille
-    std::shared_ptr<TreeNode> left;
-    std::shared_ptr<TreeNode> right;
+class TreeNode {
+public : 
+    float xb;
+    float yb;
+    float xt;
+    float yt;
+    Label* label;  // Pointeur unique vers Label si le noeud est une feuille
+    TreeNode* left;
+    TreeNode* right;
 
     // Constructeur pour les noeuds internes
-    TreeNode(int x, int y)
-        : coords(std::make_pair(x, y)), label(nullptr), left(nullptr), right(nullptr) {}
+    TreeNode(float xb, float yb, float xt, float yt)
+        : xb(xb), yb(yb), xt(xt), yt(yt), label(nullptr), left(nullptr), right(nullptr) {}
 
     // Constructeur pour les feuilles
-    TreeNode(const Label& lbl)
-        : coords(std::make_pair(lbl.getX(), lbl.getY())), label(std::make_unique<Label>(lbl)), left(nullptr), right(nullptr) {}
-};
+    TreeNode(Label* lbl)
+        : xb(lbl->getX()), yb(lbl->getY()), xt(lbl->getX()), yt(lbl->getY()), label(lbl), left(nullptr), right(nullptr) {}
 
-class BinaryTree {
-public:
-    std::shared_ptr<TreeNode> root;
+    bool isLeaf() const {
+        return label != nullptr;
+    }
+    void print() const;
 
-    BinaryTree() : root(nullptr) {}
+    std::pair<TreeNode*, bool> insert_label(Label* lab);
 
-    // Méthode pour ajouter un noeud interne
-    void addInternalNode(int x, int y, std::shared_ptr<TreeNode> parent, bool isLeft);
+    // Interdire la copie
+    TreeNode(const TreeNode&) = delete;
+    TreeNode& operator=(const TreeNode&) = delete;
 
-    // Méthode pour ajouter une feuille
-    void addLeaf(const Label& lbl, std::shared_ptr<TreeNode> parent, bool isLeft);
+    // Autoriser le déplacement
+    TreeNode(TreeNode&&) = default;
+    TreeNode& operator=(TreeNode&&) = default;
 
-    // Parcours en ordre pour afficher les valeurs
-    void inorderTraversal(std::shared_ptr<TreeNode> node);
 };
 
 

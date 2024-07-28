@@ -131,12 +131,7 @@ class TreeNode:
                 self.left = node
                 
                 
-            
-            
-        
-        
-        
-        
+    
         if right_child == None and left_child == None : 
             return None,False
         
@@ -154,62 +149,62 @@ class TreeNode:
             self.yt = left_child.yt
             return self,insert_without_cutting
         
-    def merge_fronts(self, tree_i):
-        #case 4
-        if tree_i.label:
-            self.remove_and_insert(tree_i.label)
-            return self
+    # def merge_fronts(self, tree_i):
+    #     #case 4
+    #     if tree_i.label:
+    #         self.remove_and_insert(tree_i.label)
+    #         return self
         
-        if self.label:
-            tree_i.remove_and_insert(self.label)
-            return tree_i
-        
-        
-        #case 1
-        if (tree_i.xb>=self.xb and tree_i.yb>=self.yt) or (tree_i.xb>=self.xt and tree_i.yb>=self.yb):
-            return self
+    #     if self.label:
+    #         tree_i.remove_and_insert(self.label)
+    #         return tree_i
         
         
-        #case2
-        if (tree_i.xt<=self.xb and tree_i.yt<=self.yt) or (tree_i.xt<=self.xt and tree_i.yt<=self.yb):
-            return tree_i
+    #     #case 1
+    #     if (tree_i.xb>=self.xb and tree_i.yb>=self.yt) or (tree_i.xb>=self.xt and tree_i.yb>=self.yb):
+    #         return self
         
         
-        #case 3.A
-        if (tree_i.xt<self.xb and tree_i.yb>self.yt):
-            node = TreeNode(self.xt, tree_i.yt, tree_i.xb, self.yb)
-            node.left = tree_i
-            node.right = self
-            return node
+    #     #case2
+    #     if (tree_i.xt<=self.xb and tree_i.yt<=self.yt) or (tree_i.xt<=self.xt and tree_i.yt<=self.yb):
+    #         return tree_i
         
         
-        #case 3.B
-        if (tree_i.xb>self.xt and tree_i.yt<self.yb):
-            node = TreeNode(tree_i.xt, self.yt, self.xb, tree_i.yb)
-            node.left = self
-            node.right = tree_i
-            return node
+    #     #case 3.A
+    #     if (tree_i.xt<self.xb and tree_i.yb>self.yt):
+    #         node = TreeNode(self.xt, tree_i.yt, tree_i.xb, self.yb)
+    #         node.left = tree_i
+    #         node.right = self
+    #         return node
         
-        #case 4
-        if (tree_i.xb>=self.xb and tree_i.xt<=self.xt and tree_i.yb>= self.yb and tree_i.yt<=self.yt):
-            r = self.right
-            l = self.left
+        
+    #     #case 3.B
+    #     if (tree_i.xb>self.xt and tree_i.yt<self.yb):
+    #         node = TreeNode(tree_i.xt, self.yt, self.xb, tree_i.yb)
+    #         node.left = self
+    #         node.right = tree_i
+    #         return node
+        
+    #     #case 4
+    #     if (tree_i.xb>=self.xb and tree_i.xt<=self.xt and tree_i.yb>= self.yb and tree_i.yt<=self.yt):
+    #         r = self.right
+    #         l = self.left
             
-            if(tree_i.xt<l.xb or tree_i.yb>l.yt):
-                self.right.merge_fronts(tree_i)
-                return self
+    #         if(tree_i.xt<l.xb or tree_i.yb>l.yt):
+    #             self.right.merge_fronts(tree_i)
+    #             return self
             
-            if(tree_i.xb>r.xt or tree_i.yt<r.yb):
-                self.left.merge_fronts(tree_i)
-                return self
+    #         if(tree_i.xb>r.xt or tree_i.yt<r.yb):
+    #             self.left.merge_fronts(tree_i)
+    #             return self
             
-            if(tree_i.xt<r.xt or tree_i.yb>r.yb):
-                #TODO : case 5.A
-                print("todo")
+    #         if(tree_i.xt<r.xt or tree_i.yb>r.yb):
+    #             #TODO : case 5.A
+    #             print("todo")
                 
-            if(tree_i.xb>l.xb or tree_i.yt<l.yt):
-                #TODO : case 5.B
-                print("todo")
+    #         if(tree_i.xb>l.xb or tree_i.yt<l.yt):
+    #             #TODO : case 5.B
+    #             print("todo")
         
             
         
@@ -269,17 +264,17 @@ def main():
     # plt.show()
     #####################
 
-    n = 10
+    n = 4
     l = []
     for k in range(n):
         l.append(Label(k,n-1-k))
 
     bt2 = create_balanced_tree(l)  
 
-    x,y = 1,3.5
+    x,y = 1,1
     bt2.plot()
     
-    bt2.remove_and_try_insertion(Label(x,y))
+    bt2.remove_and_insert(Label(x,y))
     plt.scatter([x], [y], c="gray", marker = 'x')
     plt.figure()
     plt.scatter([x], [y], c="gray", marker = 'x')
@@ -290,6 +285,12 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    
+    root = create_balanced_tree([Label(2,5),Label(3,3),Label(4,2),Label(6,1)])
+    root.remove_and_insert(Label(2.5,4))
+    
+    root.plot()
+    plt.show()
     
     
