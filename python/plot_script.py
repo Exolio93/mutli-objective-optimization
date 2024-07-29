@@ -32,10 +32,10 @@ col2 = '#499c69'
 col3 = '#f0e173'
 
 
-#ax.plot(tableau[0][:], y1, label='FIFO', color=col1, linestyle='-', linewidth=2, marker='o', markersize=5, markeredgewidth=1.5)
+ax.plot(tableau[0][:], tableau[3][:], label='Queue of labels', color=col3, linestyle='-', linewidth=2, marker='o', markersize=5, markeredgewidth=1.5)
 #plt.plot(tableau[0][:], tableau[2][:], label='Sinus', color=col2, linestyle='-', linewidth=2, marker='o', markersize=5, markeredgewidth=1.5)
-ax.plot(tableau[0][:], Y, label='', color=col3, linestyle='-', linewidth=2, marker='o', markersize=5, markeredgewidth=1.5)
-ax.set_ylim(0, 100)
+ax.plot(tableau[0][:], tableau[6][:], label='Queue of nodes', color=col1, linestyle='-', linewidth=2, marker='o', markersize=5, markeredgewidth=1.5)
+# ax.set_ylim(0, 100)
 # Ajouter des titres et des légendes
 # ax.set_xlabel('Number of iterations of the while loop',fontsize=18)
 # ax.set_ylabel('Number of graph nodes',fontsize=18)

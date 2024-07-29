@@ -12,7 +12,7 @@ using Duration = std::chrono::duration<double>;
 int main(int argc, char* argv[]){
 
     if (argc != 5) {
-        int state =2;
+        int state =1;
 
 
         if (state == 0) {
@@ -53,19 +53,7 @@ int main(int argc, char* argv[]){
             shortest_path_2D(g5,0,false);
             shortest_path_2D(g6,0,false);
             shortest_path_2D(g7,0,false);
-            shortest_path_2D(g8,0,false);
-
-            std::cout<<"-----------"<<std::endl;
-
-            shortest_path_2D_using_AUC(g1,0,false);
-            shortest_path_2D_using_AUC(g2,0,false);
-            shortest_path_2D_using_AUC(g3,0,false);
-            shortest_path_2D_using_AUC(g4,0,false);
-            shortest_path_2D_using_AUC(g5,0,false);
-            shortest_path_2D_using_AUC(g6,0,false);
-            shortest_path_2D_using_AUC(g7,0,false);
-            shortest_path_2D_using_AUC(g8,0,false);
-
+            // shortest_path_2D(g8,0,false);
 
             return 0;
 

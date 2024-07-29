@@ -13,6 +13,7 @@ class TreeNode:
         self.label = lab
         self.left = None
         self.right = None
+        self.isInserted = False
         if (lab == None):
             self.xt = xt
             self.yt = yt
@@ -148,68 +149,79 @@ class TreeNode:
             self.xt = right_child.xt
             self.yt = left_child.yt
             return self,insert_without_cutting
+
         
-    # def merge_fronts(self, tree_i):
-    #     #case 4
-    #     if tree_i.label:
-    #         self.remove_and_insert(tree_i.label)
-    #         return self
-        
-    #     if self.label:
-    #         tree_i.remove_and_insert(self.label)
-    #         return tree_i
-        
-        
-    #     #case 1
-    #     if (tree_i.xb>=self.xb and tree_i.yb>=self.yt) or (tree_i.xb>=self.xt and tree_i.yb>=self.yb):
-    #         return self
-        
-        
-    #     #case2
-    #     if (tree_i.xt<=self.xb and tree_i.yt<=self.yt) or (tree_i.xt<=self.xt and tree_i.yt<=self.yb):
-    #         return tree_i
-        
-        
-    #     #case 3.A
-    #     if (tree_i.xt<self.xb and tree_i.yb>self.yt):
-    #         node = TreeNode(self.xt, tree_i.yt, tree_i.xb, self.yb)
-    #         node.left = tree_i
-    #         node.right = self
-    #         return node
-        
-        
-    #     #case 3.B
-    #     if (tree_i.xb>self.xt and tree_i.yt<self.yb):
-    #         node = TreeNode(tree_i.xt, self.yt, self.xb, tree_i.yb)
-    #         node.left = self
-    #         node.right = tree_i
-    #         return node
-        
-    #     #case 4
-    #     if (tree_i.xb>=self.xb and tree_i.xt<=self.xt and tree_i.yb>= self.yb and tree_i.yt<=self.yt):
-    #         r = self.right
-    #         l = self.left
+def merge_fronts(tree_1, tree_2, allow_to_insert):
+    #tree_1 is label
+    if (tree_1.label):
+        tree_2.remove_and_insert(tree_1.label)
+        return tree_2
+    
+    #tree_2 is label
+    if (tree_2.label):
+        tree_1.remove_and_insert(tree_2.label)
+        return tree_1
+    
+    #tree_2 dominate tree_1
+    if (tree_2.xt<= tree_1.xb and tree_2.yt<=tree_1.yb):
+        return tree_2
+    
+    #tree_1 dominate tree_2
+    if (tree_2.xb>= tree_1.xt and tree_2.yb>=tree_1.yt):
+        return tree_1
+    
+    
+    if (tree_2.xb>= tree_1.xt and tree_2.yt<=tree_1.yb and allow_to_insert):
+        node = TreeNode(tree_2.xt, tree_1.yt, tree_1.xb, tree_2.yb)
+        node.left = tree_1
+        node.right = tree_2
+        return node
+    
+    if (tree_2.xt<= tree_1.xb and tree_2.yb>=tree_1.yt and allow_to_insert):
+        node = TreeNode(tree_1.xt, tree_2.yt, tree_2.xb, tree_1.yb)
+        node.left = tree_2
+        node.right = tree_1
+        return node
+    
+    # tree_2 inside tree_1
+    if (tree_2.xt>= tree_1.xt and tree_2.xb<= tree_1.xb and tree_2.yt>= tree_1.yt and tree_2.yb<=tree_1.yb):
+        b = r.uniform(0,1)>0.5
+        tree_left = merge_fronts(tree_1.left, tree_2, b)
+        tree_right = merge_fronts(tree_1.right, tree_2, not b)
             
-    #         if(tree_i.xt<l.xb or tree_i.yb>l.yt):
-    #             self.right.merge_fronts(tree_i)
-    #             return self
+        node = TreeNode(tree_left.xt, tree_right.yt, tree_right.xb, tree_left.yb)
+        node.left = tree_left
+        node.right = tree_right
+        return node
+    
+    
+    # tree_1 inside tree_2
+    if (tree_1.xt>= tree_2.xt and tree_1.xb<= tree_2.xb and tree_1.yt>= tree_2.yt and tree_1.yb<=tree_2.yb):
+        b = r.uniform(0,1)>0.5
+        tree_left = merge_fronts(tree_1, tree_2.left, b)
+        tree_right = merge_fronts(tree_1, tree_2.right, not b)
+        node = TreeNode(tree_left.xt, tree_right.yt, tree_right.xb, tree_left.yb)
+        node.left = tree_left
+        node.right = tree_right
+        return node
+    
+    size_1 = tree_1.yt - tree_1.yb + tree_1.xt-tree_1.yb
+    size_2 = tree_2.yt - tree_2.yb + tree_2.xt-tree_2.yb
+    
+    #"else" case
+    if (size_1>size_2):
+       b = r.uniform(0,1)>0.5
+        tree_left = merge_fronts(tree_1.left, tree_2, b)
+        tree_right = merge_fronts(tree_1.right, tree_2, not b)
             
-    #         if(tree_i.xb>r.xt or tree_i.yt<r.yb):
-    #             self.left.merge_fronts(tree_i)
-    #             return self
-            
-    #         if(tree_i.xt<r.xt or tree_i.yb>r.yb):
-    #             #TODO : case 5.A
-    #             print("todo")
-                
-    #         if(tree_i.xb>l.xb or tree_i.yt<l.yt):
-    #             #TODO : case 5.B
-    #             print("todo")
-        
-            
+        node = TreeNode(tree_left.xt, tree_right.yt, tree_right.xb, tree_left.yb)
+        node.left = tree_left
+        node.right = tree_right
+        return node 
         
         
         
+    
     
 def create_balanced_tree(l):
     if len(l) == 0 : 
