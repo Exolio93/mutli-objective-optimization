@@ -12,7 +12,7 @@
 
 std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s);
 
-std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display);
+std::vector<double> shortest_path_2D(Graph g, int s, bool display);
 std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display);
 
 void labels_update(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);

@@ -55,11 +55,11 @@ class TreeNode:
                 
     def plot(self):
         if self.label:
-            plt.scatter([self.label.x],[self.label.y], c='yellow')
+            plt.scatter([self.label.x],[self.label.y], c='black',s=70,marker="o")
             return (self.label.x, self.label.y, self.label.x, self.label.y)
         
-        plt.scatter([self.xt],[self.yt], c='blue')
-        plt.scatter([self.xb],[self.yb], c='green')
+        plt.scatter([self.xt],[self.yt],s=20, c='blue')
+        plt.scatter([self.xb],[self.yb],s=20, c='green')
         
         if self.left:
             xt,yt,xb,yb = self.left.plot()
@@ -83,7 +83,7 @@ class TreeNode:
         if self.label:
             if self.label.x>= lab.x and self.label.y >= lab.y:
                 if lab.isIns :
-                    return None, False
+                    return None, False  
                 
                 else : 
                     lab.isIns = True
@@ -210,7 +210,7 @@ def merge_fronts(tree_1, tree_2, allow_to_insert):
     
     #"else" case
     if (size_1>size_2):
-       b = r.uniform(0,1)>0.5
+        b = r.uniform(0,1)>0.5
         tree_left = merge_fronts(tree_1.left, tree_2, b)
         tree_right = merge_fronts(tree_1.right, tree_2, not b)
             
@@ -299,8 +299,15 @@ def main():
 if __name__ == "__main__":
     # main()
     
-    root = create_balanced_tree([Label(2,5),Label(3,3),Label(4,2),Label(6,1)])
-    root.remove_and_insert(Label(2.5,4))
+    root = create_balanced_tree([Label(1,7),Label(2,5),Label(3,3),Label(4,2),Label(6,1)])
+    plt.xlim(0, 7)
+    plt.ylim(0, 8)
+    
+    plt.plot([2.8,2.8 ],[0.8, 3.2], color='red')
+    plt.plot([2.8,6.2 ],[3.2,3.2], color='red')
+    plt.plot([6.2,6.2 ],[3.2,0.8], color='red')
+    plt.plot([6.2,2.8],[0.8,0.8], color='red')
+            
     
     root.plot()
     plt.show()

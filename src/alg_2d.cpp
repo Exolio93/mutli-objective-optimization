@@ -139,7 +139,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
 
 
-std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
+std::vector<double> shortest_path_2D(Graph g, int s, bool display) {
     
     
 
@@ -215,23 +215,20 @@ std::vector<Label_set> shortest_path_2D(Graph g, int s, bool display) {
     
     <<std::endl;
 
-    if (display) {
-        for(int i =0; i<g.N; ++i) {
-            std::cout<<"|||||||||||||||||||"<<std::endl;
-            std::cout<<"NODE "<<i<<std::endl;
-            labels[i].print();
-        }
-    }
+     // Ajout des valeurs au vecteur
 
-    // std::ofstream outFile("../save/test/solution");
-    // outFile<<g.N<<std::endl;
-    // for (int i = 0;i<g.N;i++) {
-    //     for(auto it = labels[i].set.begin();it!=labels[i].set.end();++it) {
-    //         outFile<<(*it).getX()<< " "<<(*it).getY()<<" "<<(*it).getPred()<<std::endl;
-    //     }
-    //     outFile<<"*"<<std::endl;
-    // }
-    return labels;
+    std::vector<double> values;
+    values.push_back(durations[0].count()); // Total time
+    values.push_back(durations[4].count()); // First Dijkstra
+    values.push_back(durations[1].count() / durations[0].count()); // % for queue
+    values.push_back((durations[2].count() - durations[3].count()) / durations[0].count()); // % for travel neighbors
+    values.push_back(durations[3].count() / durations[0].count()); // % for update labels
+    values.push_back(static_cast<double>(total_l) / counter); // average size of queue
+    values.push_back(counter); // iteration of while loop
+    values.push_back(static_cast<double>(av_size) / (counter2 * 2)); // average size of label_set
+
+    return values;
+
     
     
     
@@ -320,6 +317,7 @@ std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) 
     <<"\nAv size label_set :"<<av_size/(counter2*2)
     
     <<std::endl;
+    
 
     return labels;
     
