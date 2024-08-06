@@ -4,7 +4,7 @@ using Clock = std::chrono::high_resolution_clock;
 using Duration = std::chrono::duration<double>;
 
 
-void labels_update(std::vector<Label_set> &labels, Arc &Wij,Queue &queue){
+void labels_update(std::vector<Label_set> &labels, Arc &Wij,Queue_NP &queue){
     bool b = merger_pareto_set(labels, Wij);
     if(b){
         queue.add_point(Wij.n_to);
@@ -139,7 +139,7 @@ bool merger_pareto_set(std::vector<Label_set> &labs,Arc &Wij){
 
 
 
-std::vector<double> shortest_path_2D(Graph g, int s, bool display) {
+std::vector<double> shortest_path_NP_FIFO(Graph g, int s, bool display) {
     
     
 
@@ -170,7 +170,7 @@ std::vector<double> shortest_path_2D(Graph g, int s, bool display) {
     labels[s].add_point(0,0,s,nullptr);
 
     //Queue
-    Queue q = Queue(g.N);
+    Queue_NP q = Queue_NP(g.N);
     q.add_point(s);
 
 
@@ -234,7 +234,7 @@ std::vector<double> shortest_path_2D(Graph g, int s, bool display) {
     
 }
 
-std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display) {
+std::vector<Label_set> shortest_path_NP_HP(Graph g, int s, bool display) {
     
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2");
@@ -438,4 +438,179 @@ std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s) {
 
     return dists;
 
+}
+
+
+void shortest_path_LP_FIFO(Graph g, int s, bool display) {
+
+    auto start0 = Clock::now();
+    auto start1 = Clock::now();
+    auto start2 = Clock::now();
+    auto start3 = Clock::now();
+    
+    auto end0 = Clock::now();
+    auto end1 = Clock::now();
+    auto end2 = Clock::now();
+    auto end3 = Clock::now();
+
+    float counter = 0;
+    float total_l = 0;
+    float av_size = 0;
+    float counter2 = 0;
+    if (g.dim !=2) {
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
+
+
+
+    
+    //Queue
+    Queue_LP q = Queue_LP();
+
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point_and_update(0,0,s,q,s);
+
+    
+
+    std::vector<Duration> durations(4, Duration(0));
+    while(q.size() >0) {
+        
+        
+        start1 = Clock::now();
+        Queue_elt pivot = q.first_choice();
+        if( !(pivot.getLabel()->removed) ){
+
+            counter++;
+            total_l += q.size();
+            end1 = Clock::now();
+            durations[1] += end1 - start1;
+
+
+            start2 = Clock::now();
+            for (auto it = g.A[pivot.getNode()].begin();it!=g.A[pivot.getNode()].end();++it) {
+                av_size += labels[(*it).n_to].set.size();
+                counter2++;
+
+                start3 = Clock::now();
+                labels[(*it).n_to].add_point_and_update(
+                    pivot.getLabel()->getX() + (*it).weights[0],
+                    pivot.getLabel()->getY() + (*it).weights[1],
+                    pivot.getNode(),q,(*it).n_to);
+                end3 = Clock::now();
+            }
+            end2 = Clock::now();
+            durations[2] = end2-start2;
+            durations[3] = end3-start3;
+        }
+
+        
+    }
+    end0 = Clock::now();
+    durations[0] = end0 - start0;
+
+    
+    std::cout<<"\nTotal time: "<<durations[0].count()
+    <<"\n\% for queue : "<<durations[1].count()/durations[0].count()
+    << "\n\% for travel neighbors : "<<(durations[2].count()-durations[3].count())/durations[0].count()
+    << "\n\% for update a labels : "<<durations[3].count()/durations[0].count()
+    <<"\naverage size of queue : "<<total_l/counter
+    <<"\niteration of while loop : "<<counter
+    <<"\nAv size label_set :"<<av_size/(counter2*2)<<std::endl;
+
+    if (display) {
+        std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
+    }
+    
+}
+
+void shortest_path_LP_TREE(Graph g, int s, bool display) {
+
+    auto start0 = Clock::now();
+    auto start1 = Clock::now();
+    auto start2 = Clock::now();
+    auto start3 = Clock::now();
+    
+    auto end0 = Clock::now();
+    auto end1 = Clock::now();
+    auto end2 = Clock::now();
+    auto end3 = Clock::now();
+
+    float counter = 0;
+    float total_l = 0;
+    float av_size = 0;
+    float counter2 = 0;
+    if (g.dim !=2) {
+        print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
+
+
+
+    
+    //Queue
+    Queue_LP q = Queue_LP();
+
+    //Labels
+    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
+    labels[s].add_point_and_update(0,0,s,q,s);
+
+    
+
+    std::vector<Duration> durations(4, Duration(0));
+    while(q.size() >0) {
+        
+        
+        start1 = Clock::now();
+        Queue_elt pivot = q.first_choice();
+        if( !(pivot.getLabel()->removed) ){
+
+            counter++;
+            total_l += q.size();
+            end1 = Clock::now();
+            durations[1] += end1 - start1;
+
+
+            start2 = Clock::now();
+            for (auto it = g.A[pivot.getNode()].begin();it!=g.A[pivot.getNode()].end();++it) {
+                av_size += labels[(*it).n_to].set.size();
+                counter2++;
+
+                start3 = Clock::now();
+                labels[(*it).n_to].add_point_and_update(
+                    pivot.getLabel()->getX() + (*it).weights[0],
+                    pivot.getLabel()->getY() + (*it).weights[1],
+                    pivot.getNode(),q,(*it).n_to);
+                end3 = Clock::now();
+            }
+            end2 = Clock::now();
+            durations[2] = end2-start2;
+            durations[3] = end3-start3;
+        }
+
+        
+    }
+    end0 = Clock::now();
+    durations[0] = end0 - start0;
+
+    
+    std::cout<<"\nTotal time: "<<durations[0].count()
+    <<"\n\% for queue : "<<durations[1].count()/durations[0].count()
+    << "\n\% for travel neighbors : "<<(durations[2].count()-durations[3].count())/durations[0].count()
+    << "\n\% for update a labels : "<<durations[3].count()/durations[0].count()
+    <<"\naverage size of queue : "<<total_l/counter
+    <<"\niteration of while loop : "<<counter
+    <<"\nAv size label_set :"<<av_size/(counter2*2)<<std::endl;
+
+    if (display) {
+        std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
+        for(int i =0; i<g.N; ++i) {
+            std::cout<<"|||||||||||||||||||"<<std::endl;
+            std::cout<<"NODE "<<i<<std::endl;
+            labels[i].print();
+        }
+    }
+    
 }

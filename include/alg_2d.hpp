@@ -4,7 +4,7 @@
 #include "graph.hpp"
 #include "tools.hpp"
 #include "data_struct_2d.hpp"
-#include<queue>
+#include<queue> 
 #include<stack>
 #include<tuple>
 #include <algorithm> 
@@ -12,8 +12,10 @@
 
 std::vector<std::vector<float>> initialize_shape_pareto_set(Graph g, int s);
 
-std::vector<double> shortest_path_2D(Graph g, int s, bool display);
-std::vector<Label_set> shortest_path_2D_using_AUC(Graph g, int s, bool display);
+std::vector<double> shortest_path_NP_FIFO(Graph g, int s, bool display);
+std::vector<Label_set> shortest_path_NP_HP(Graph g, int s, bool display);
+void shortest_path_LP_FIFO(Graph g, int s, bool display);
+void shortest_path_LP_TREE(Graph g, int s, bool display);
 
 void labels_update(std::vector<Label_set> &labels, Arc &Wij,std::vector<int> &queue);
 void labels_update_using_AUC(std::vector<Label_set> &labels, Arc &Wij,Heap &queue, std::vector<std::vector<int>> &borders);

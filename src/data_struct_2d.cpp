@@ -198,7 +198,7 @@ bool Heap::empty() const {
 
 
 
-void Queue::add_point(int i){
+void Queue_NP::add_point(int i){
     if (node_bool[i]) {
         return;
     }
@@ -211,14 +211,14 @@ void Queue::add_point(int i){
 
 
 
-int Queue::pick(){
+int Queue_NP::pick(){
     int i = queue_list.front();
     queue_list.pop();
     node_bool[i] = false;
     return i;
 }
 
-int Queue::size(){
+int Queue_NP::size(){
     return queue_list.size();
 }
 
@@ -327,3 +327,162 @@ std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
         return std::make_pair(this, insert_without_cutting);
     }
 }
+
+
+
+
+int Queue_elt::getNode(){
+    return std::get<0>(elt);
+};
+Label* Queue_elt::getLabel(){
+    return std::get<1>(elt);
+};
+
+void Queue_elt::print() {
+    std::cout<< getNode()<< " - "<< getLabel()->getX()<<" "<<getLabel()->getY()<<" "<<getLabel()->getPred() <<std::endl;
+}
+
+
+void Queue_LP::add_elt(int n, Label* lab){
+    queue_list.push_back(Queue_elt(n,lab));
+    return;
+};
+
+
+
+Queue_elt Queue_LP::first_choice(){
+    Queue_elt l = queue_list.front();
+    queue_list.pop_front();
+    return l;
+}
+
+bool Queue_elt::operator<(Queue_elt& other){
+        if (getLabel()->getX()< other.getLabel()->getX()) {return true;}
+        if (getLabel()->getX()== other.getLabel()->getX()
+            &&getLabel()->getY() < other.getLabel()->getY()) {
+                return true;   
+        }
+        return false;
+    }
+
+
+int Queue_LP::size(){
+    return queue_list.size();
+}
+
+
+
+void Label_set::add_point_and_update(int x, int y,  int pred,Queue_LP &queue,int j){
+
+    /*
+    1 - On le place dans la liste selon sa coordonnée x
+    2 - On compare au point d'avant 
+        --> si y>=y_precedent, on suprime x,y et on return
+    3 - On compare au point suivant :
+        --> Si y>y_suivant, on return 
+        --> Si y=y_suivant, on supprime le point suivant, qui est faiblement dominé, et on return
+        --> Si y<y_suiant, on supprime tout le points i suivant tq : y<yi, on return 
+
+
+    */
+
+
+    if (set.size() == 0) {
+        set.push_back(Label(x,y,pred,nullptr)); 
+        Label& lastLabel = set.back();
+        queue.add_elt(j,(&lastLabel));
+        return;     
+    }
+
+    
+
+    auto it = set.begin();
+    int i = 0;
+    int state = 0;
+
+    for(; it!=set.end(); ++it) {
+        if((*it).getX() == x ) {
+            state = 1;
+
+            break;
+        }
+        if((*it).getX() > x ) {
+            i --;
+            it --;
+            state = 2;
+            break;
+        }
+        ++i; 
+    }
+
+    auto next_it = it;
+    next_it++;
+    auto next_next_it = next_it;
+    next_next_it++;
+
+    //Cas ou l'élement doit être ajouté à la fin
+    if (state == 0) {
+        if (y>= (*(std::prev(set.end()))).getY()) {
+            return;
+        }
+
+        set.push_back(Label(x,y,pred,nullptr)); 
+        Label& lastLabel = set.back();
+        queue.add_elt(j,&lastLabel);
+        return;
+    }
+
+    //cas ou l'élement est comprise entre 2 valeurs du set selon x
+    if(state == 2) {
+        
+        if (i>= 0 && y>= (*it).getY()) { //ie : quand on est pas sur le 1er élement
+            return;
+        }
+        
+        if(y>(*next_it).getY()) {
+            auto it0 = set.insert(next_it,Label(x,y,pred,nullptr));
+            
+            queue.add_elt(j,&(*it0));
+            return;
+        }
+        if(y == (*next_it).getY()) {
+            
+            *next_it = Label(x,y,pred,nullptr);
+            queue.add_elt(j,&(*next_it));
+            return;
+        }
+        if(y< (*next_it).getY()) {
+            *next_it = Label(x,y,pred,nullptr);
+    
+            while(i+2< set.size() && y<= (*next_next_it).getY()) {
+                next_next_it->removed = true;
+                set.erase(next_next_it);
+                ++next_next_it;
+            }
+            queue.add_elt(j,&(*next_it));
+            return;
+        }
+    }
+
+    //Cas ou l'élement à la même valeur de x qu'un autre éleement du set
+    if(state == 1) {
+
+        if(y>= (*it).getY()) {
+            return;
+        }
+
+        if(y<(*it).getY()) {
+            *it = Label(x,y,pred,nullptr);
+            while(i+1< set.size() && y<= (*next_it).getY()) {
+                next_it->removed = true;
+                set.erase(next_it);
+                ++next_it;
+
+            }
+            queue.add_elt(j,&(*it));
+            return;
+        }
+    }
+    return;
+}
+

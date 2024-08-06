@@ -22,7 +22,7 @@ void calculate(int n, int number_of_graph, float density) {
     std::vector<double> av_result(7,0);
     std::vector<double> result;
     for (int i = 0; i < number_of_graph; ++i) {
-        result = shortest_path_2D(graphs[i], 0, false);
+        result = shortest_path_NP_FIFO(graphs[i], 0, false);
         for(int k =0; k<av_result.size();++k){
             av_result[k] += result[k];
         }
@@ -72,15 +72,7 @@ int main(int argc, char* argv[]){
         Graph g9 = Graph::load_graph(d5000);
 
         
-        // shortest_path_2D(g1,0,false);
-        shortest_path_2D(g2,0,false);
-        // shortest_path_2D(g3,0,false);
-        shortest_path_2D(g4,0,false);
-        // shortest_path_2D(g5,0,false);
-        shortest_path_2D(g6,0,false);
-        // shortest_path_2D(g7,0,false);
-        shortest_path_2D(g8,0,false);
-        shortest_path_2D(g9,0,false);
+
 
         return 0;
 
@@ -140,7 +132,7 @@ int main(int argc, char* argv[]){
             float density;
 
             std::cin.ignore();
-            std::cout << "\nFile name: (ex : temp/2_50_10) ";
+            std::cout << "\nFile name: (ex : temp/2_50_10): ";
             std::getline(std::cin, name);
 
 
@@ -151,6 +143,7 @@ int main(int argc, char* argv[]){
             std::cout << "- Label processing - Tree (4)\n";
             std::cin>>n;
 
+            Graph g = Graph::load_graph("../save/" + name);
 
             int choice2;
             std::cout << "Please enter your choice (1/2/3/4): ";
@@ -158,6 +151,23 @@ int main(int argc, char* argv[]){
             if(choice2 < 1 || choice2 > 3) {
                 std::cerr << "Invalid choice. Please restart the program and enter a valid option." << std::endl;
                 return 1; 
+            }
+
+            if (choice2 == 1) {
+                shortest_path_NP_FIFO(g,0,false);
+                return 0;
+            }
+            if (choice2 == 2) {
+                shortest_path_NP_HP(g,0,false);
+                return 0;
+            }
+            if (choice2 == 3) {
+                shortest_path_LP_FIFO(g,0,false);
+                return 0;
+            }
+            if (choice2 == 4) {
+                shortest_path_LP_TREE(g,0,false);
+                return 0;
             }
 
             

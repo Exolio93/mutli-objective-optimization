@@ -18,6 +18,7 @@ public :
     float y;
     int pred;
     Label* label_pred;
+    bool removed = false;
     bool is_inserted = false;
     
     float getX() const;
@@ -26,6 +27,31 @@ public :
     Label* getLabelPred() const;
     Label(float _x, float _y, int _pred, Label* lab) {x = _x; y=_y; pred = _pred; label_pred = lab;}
 };
+
+class Queue_elt {
+public :
+    std::tuple<int,Label*> elt = std::make_tuple(0,new Label(0,0,-1,nullptr));
+    Queue_elt(int n, Label* label) : elt(std::make_tuple(n, label)) {};
+    Queue_elt(){};
+    void print();
+    int getNode();
+    Label* getLabel();
+
+    bool operator<(Queue_elt& other);
+};
+
+class Queue_LP {
+public :
+    std::list<Queue_elt> queue_list;
+    Queue_LP(){}
+    void add_elt(int n, Label* lab);
+    
+    Queue_elt first_choice();
+    int size();
+
+
+};
+
 
 class Label_set {
 public :
@@ -40,9 +66,12 @@ public :
     float calculate_AUC(std::vector<std::vector<float>> &borders, int i);
     Label get_last();
 
+    void add_point_and_update(int x, int y , int pred,Queue_LP &queue,int j);
+
 
     
 };
+
 
 class Heap_elt {
 public :
@@ -70,11 +99,11 @@ public:
 
 
 
-class Queue {
+class Queue_NP {
 public :
     std::queue<int> queue_list;
     std::vector<bool> node_bool;
-    Queue(int N){node_bool = std::vector<bool>(N,false);}
+    Queue_NP(int N){node_bool = std::vector<bool>(N,false);}
     void add_point(int i);
     int pick();
     int size();
@@ -118,6 +147,12 @@ public :
     TreeNode& operator=(TreeNode&&) = default;
 
 };
+
+
+
+
+
+
 
 
 
