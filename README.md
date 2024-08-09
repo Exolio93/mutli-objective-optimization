@@ -6,11 +6,11 @@ mingw32-make
 
 ## Execution
 
-3 modes d'exécution : 
-- Résolution du problème sur un nouveau graph
-- Résolution du problème sur un graph existant
-- Création d'un nouveau graph
+3 execution modes:
 
-Indiquer les nombre floattant de la manière suivante : "3.1415"
+Solving the problem on a new graph
+Solving the problem on an existing graph
+Creating a new graph
+Indicate floating-point numbers as follows: "3.1415"
 
-L'algorithme LP_TREE n'est pour le moment pas fonctionnel.
+The LP_TREE algorithm is currently not functional.
