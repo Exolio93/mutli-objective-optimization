@@ -6,14 +6,11 @@ mingw32-make
 
 ## Execution
 
-dev.exe path alg s t
+3 modes d'exécution : 
+- Résolution du problème sur un nouveau graph
+- Résolution du problème sur un graph existant
+- Création d'un nouveau graph
 
-Where : 
-- path is the string for loading the graph
-- alg is the choice of the alg : 0 for FIFO, 1 for Hyper volume
-- s is the source node
-- t is the objective node
+Indiquer les nombre floattant de la manière suivante : "3.1415"
 
-Example : dev.exe "../save/temp/small_graph" 0 0 3
-
-ak
+L'algorithme LP_TREE n'est pour le moment pas fonctionnel.
