@@ -8,11 +8,11 @@ mingw32-make
 
 3 execution modes:
 
-Solving the problem on a new graph
+-  the problem on a new graph
 
-Solving the problem on an existing graph
+- Solving the problem on an existing graph
 
-Creating a new graph
+- Creating a new graph
 
 Indicate floating-point numbers as follows: "3.1415"
 
