@@ -136,7 +136,7 @@ public :
     }
     void print() const;
 
-    std::pair<TreeNode*, bool> insert_label(Label* lab);
+    std::pair<TreeNode*, bool> insert_label(Label* lab, Queue_LP& q, int j);
 
     // Interdire la copie
     TreeNode(const TreeNode&) = delete;

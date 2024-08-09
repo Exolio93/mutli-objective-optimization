@@ -476,6 +476,7 @@ void shortest_path_LP_FIFO(Graph g, int s, bool display) {
     while(q.size() >0) {
         
         
+        
         start1 = Clock::now();
         Queue_elt pivot = q.first_choice();
         if( !(pivot.getLabel()->removed) ){
@@ -542,7 +543,6 @@ void shortest_path_LP_TREE(Graph g, int s, bool display) {
 
     float counter = 0;
     float total_l = 0;
-    float av_size = 0;
     float counter2 = 0;
     if (g.dim !=2) {
         print_and_exit("dijkstra_bin : La dimension n'est pas de 2"); }
@@ -554,18 +554,27 @@ void shortest_path_LP_TREE(Graph g, int s, bool display) {
     Queue_LP q = Queue_LP();
 
     //Labels
-    std::vector<Label_set> labels = std::vector<Label_set>(g.N, Label_set());
-    labels[s].add_point_and_update(0,0,s,q,s);
-
+    std::vector<TreeNode*> labels = std::vector<TreeNode*>(g.N, nullptr);
+    labels[s] = new TreeNode(new Label(0,0,s,nullptr));
+    q.add_elt(0,labels[s]->label);
     
 
     std::vector<Duration> durations(4, Duration(0));
+
+    
     while(q.size() >0) {
         
         
         start1 = Clock::now();
+        
         Queue_elt pivot = q.first_choice();
+        
+        
         if( !(pivot.getLabel()->removed) ){
+            for (auto it = q.queue_list.begin(); it !=q.queue_list.end();++it) {
+                std::cout<<(*it).getNode();
+            }
+            std::cout<<std::endl;
 
             counter++;
             total_l += q.size();
@@ -575,15 +584,23 @@ void shortest_path_LP_TREE(Graph g, int s, bool display) {
 
             start2 = Clock::now();
             for (auto it = g.A[pivot.getNode()].begin();it!=g.A[pivot.getNode()].end();++it) {
-                av_size += labels[(*it).n_to].set.size();
                 counter2++;
 
                 start3 = Clock::now();
-                labels[(*it).n_to].add_point_and_update(
-                    pivot.getLabel()->getX() + (*it).weights[0],
-                    pivot.getLabel()->getY() + (*it).weights[1],
-                    pivot.getNode(),q,(*it).n_to);
+                float x = pivot.getLabel()->getX() + (*it).weights[0];
+                float y = pivot.getLabel()->getY() + (*it).weights[1];
+                if (labels[(*it).n_to] == nullptr) {
+                    labels[(*it).n_to] = new TreeNode(new Label(x,y,pivot.getNode(), pivot.getLabel()));
+                    q.add_elt((*it).n_to,labels[(*it).n_to]->label);
+                    
+                } else {
+                    labels[(*it).n_to]->insert_label(
+                        new Label(x,y,pivot.getNode(),pivot.getLabel()),
+                        q,(*it).n_to);
+            
+                }
                 end3 = Clock::now();
+                
             }
             end2 = Clock::now();
             durations[2] = end2-start2;
@@ -601,15 +618,14 @@ void shortest_path_LP_TREE(Graph g, int s, bool display) {
     << "\n\% for travel neighbors : "<<(durations[2].count()-durations[3].count())/durations[0].count()
     << "\n\% for update a labels : "<<durations[3].count()/durations[0].count()
     <<"\naverage size of queue : "<<total_l/counter
-    <<"\niteration of while loop : "<<counter
-    <<"\nAv size label_set :"<<av_size/(counter2*2)<<std::endl;
+    <<"\niteration of while loop : "<<counter<<std::endl;
 
     if (display) {
         std::cout<<"oooooooooooooooooooooo\noooooooooooooooooooooo"<<std::endl;
         for(int i =0; i<g.N; ++i) {
             std::cout<<"|||||||||||||||||||"<<std::endl;
             std::cout<<"NODE "<<i<<std::endl;
-            labels[i].print();
+            labels[i]->print();
         }
     }
     

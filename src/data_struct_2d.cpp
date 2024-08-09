@@ -245,7 +245,7 @@ void TreeNode::print() const {
 
 }
 
-std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
+std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab, Queue_LP& q, int j) {
     bool insert_without_cutting = false;
     if ((lab->getX() > xt && lab->getY() < yb) || (lab->getX() < xb && lab->getY() > yt)) {
         insert_without_cutting = true;
@@ -262,6 +262,7 @@ std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
                 yt = lab->getY();
                 xb = lab->getX();
                 yb = lab->getY();
+                q.add_elt(j,lab);
                 return std::make_pair(this, false);
             }
         } else {
@@ -285,12 +286,13 @@ std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
             yt = lab->getY();
             xb = lab->getX();
             yb = lab->getY();
+            q.add_elt(j,lab);
             return std::make_pair(this, false);
         }
     }
 
-    std::pair<TreeNode*, bool> left_couple =left->insert_label(lab);
-    std::pair<TreeNode*, bool> right_couple =right->insert_label(lab);
+    std::pair<TreeNode*, bool> left_couple =left->insert_label(lab, q, j);
+    std::pair<TreeNode*, bool> right_couple =right->insert_label(lab, q, j);
 
     left = left_couple.first;
     right = right_couple.first;
@@ -298,13 +300,13 @@ std::pair<TreeNode*, bool> TreeNode::insert_label(Label* lab) {
     if (left_couple.second && right_couple.second && !lab->is_inserted) {
 
         lab->is_inserted = true;
+        q.add_elt(j,lab);
 
         if (std::rand() / double(RAND_MAX) > 0.5) {
             TreeNode* node = new TreeNode(xt, lab->getY(), lab->getX(), yb);
             node->left = new TreeNode(lab);
             node->right = right;
             right = node;
-            node->print();
         } else {
             TreeNode* node = new TreeNode(lab->getX(), yt, xb, lab->getY());
             node->right = new TreeNode(lab);

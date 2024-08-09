@@ -92,7 +92,6 @@ int main(int argc, char* argv[]){
 
         root->print();
         Label l = Label(2.5,4,0,nullptr);
-        root->insert_label(&l);  
         std::cout<<"--------"<<std::endl;
 
         // auto new_node = std::make_shared<TreeNode>(Label(-1,-1,0,nullptr));
@@ -128,8 +127,6 @@ int main(int argc, char* argv[]){
         if (choice == 2)
         {
             std::string name;
-            int n;
-            float density;
 
             std::cin.ignore();
             std::cout << "\nFile name: (ex : temp/2_50_10): ";
@@ -141,14 +138,73 @@ int main(int argc, char* argv[]){
             std::cout << "- Node processing - Hyper-volume (2)\n";
             std::cout << "- Label processing - FIFO (3)\n";
             std::cout << "- Label processing - Tree (4)\n";
-            std::cin>>n;
 
             Graph g = Graph::load_graph("../save/" + name);
 
             int choice2;
             std::cout << "Please enter your choice (1/2/3/4): ";
             std::cin >> choice2;
-            if(choice2 < 1 || choice2 > 3) {
+            if(choice2 < 1 || choice2 > 4) {
+                std::cerr << "Invalid choice. Please restart the program and enter a valid option." << std::endl;
+                return 1; 
+            }
+
+            if (choice2 == 1) {
+                shortest_path_NP_FIFO(g,0,false);
+                return 0;
+            }
+            if (choice2 == 2) {
+                shortest_path_NP_HP(g,0,false);
+                return 0;
+            }
+            if (choice2 == 3) {
+                shortest_path_LP_FIFO(g,0,false);
+                return 0;
+            }
+            if (choice2 == 4) {
+                shortest_path_LP_TREE(g,0,false);
+                return 0;
+            }
+
+            
+
+
+        }
+
+        if (choice == 1)
+        {
+            float density;
+            int n;
+
+            std::cout << "\nNumber of nodes (ex : 1000): ";
+            std::cin >> n;
+
+            if(n < 0) {
+                std::cerr << "Invalid choice. Please restart the program and enter a valid option." << std::endl;
+                return 1; 
+            }
+            if(density < 0 || density > 1) {
+                std::cerr << "Invalid choice. Please restart the program and enter a valid option." << std::endl;
+                return 1; 
+            }
+
+            std::cout << "\nGraph density (ex : 0.1)): ";
+            std::cin >> density;
+
+            Graph g = Graph::generate_graph_on_grid(n, 2, density, 100);
+
+            std::cout << "\nChoice of algorithm\n";
+            std::cout << "- Node processing - FIFO (1)\n";
+            std::cout << "- Node processing - Hyper-volume (2)\n";
+            std::cout << "- Label processing - FIFO (3)\n";
+            std::cout << "- Label processing - Tree (4)\n";
+
+            
+
+            int choice2;
+            std::cout << "Please enter your choice (1/2/3/4): ";
+            std::cin >> choice2;
+            if(choice2 < 1 || choice2 > 4) {
                 std::cerr << "Invalid choice. Please restart the program and enter a valid option." << std::endl;
                 return 1; 
             }
